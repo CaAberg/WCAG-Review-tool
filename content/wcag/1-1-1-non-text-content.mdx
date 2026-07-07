@@ -1,0 +1,34 @@
+---
+title: "Non-text Content"
+criterionId: "1.1.1"
+level: "A"
+description: "All non-text content must have a text alternative that serves the equivalent purpose."
+---
+
+## Why it matters
+
+Screen readers cannot interpret images, icons, or charts without text alternatives. Users who cannot see visual content rely on `alt` text to understand what is being conveyed.
+
+## React examples
+
+### Do: Provide descriptive alt text
+
+```tsx
+<img src="/profile.jpg" alt="Jane Doe, product designer" />
+```
+
+### Do: Mark decorative images
+
+```tsx
+<img src="/divider.svg" alt="" role="presentation" />
+```
+
+### Don't: Omit alt entirely
+
+```tsx
+<img src="/chart.png" />
+```
+
+## How our analyzer checks this
+
+The analyzer flags `<img>` elements missing an `alt` attribute and suggests adding descriptive text or marking the image as decorative.

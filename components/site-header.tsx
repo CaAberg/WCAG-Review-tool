@@ -1,0 +1,59 @@
+import Link from "next/link";
+import { Accessibility } from "lucide-react";
+import { AuthNav } from "@/components/auth/auth-nav";
+import { cn } from "@/lib/utils";
+
+export type SiteHeaderProps = {
+  className?: string;
+};
+
+/** Main site navigation header. */
+export function SiteHeader({ className }: SiteHeaderProps) {
+  return (
+    <header
+      className={cn(
+        "border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        className,
+      )}
+    >
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+        >
+          <Accessibility className="h-6 w-6 text-primary" aria-hidden />
+          <span>WCAG Access</span>
+        </Link>
+        <nav aria-label="Main navigation" className="flex items-center gap-6">
+          <ul className="flex items-center gap-6 text-sm font-medium">
+            <li>
+              <Link
+                href="/analyzer"
+                className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
+                Analyzer
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/guides"
+                className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
+                Guides
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/audits"
+                className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
+                My Audits
+              </Link>
+            </li>
+          </ul>
+          <AuthNav />
+        </nav>
+      </div>
+    </header>
+  );
+}

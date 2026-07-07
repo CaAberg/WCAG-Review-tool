@@ -1,0 +1,30 @@
+---
+title: "Focus Visible"
+criterionId: "2.4.7"
+level: "AA"
+description: "Keyboard focus indicators must be visible."
+---
+
+## Why it matters
+
+Keyboard users need to see which element is focused. Removing the default outline without providing a replacement makes navigation impossible.
+
+## React examples
+
+### Do: Replace outline with a visible ring
+
+```tsx
+<button className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+  Submit
+</button>
+```
+
+### Don't: Remove focus styles entirely
+
+```tsx
+<button className="outline-none focus:outline-none">Submit</button>
+```
+
+## How our analyzer checks this
+
+We detect Tailwind classes like `outline-none` without accompanying `focus-visible:ring` or similar focus replacement utilities.

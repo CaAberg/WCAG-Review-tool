@@ -1,0 +1,35 @@
+---
+title: "Labels or Instructions"
+criterionId: "3.3.2"
+level: "A"
+description: "Labels or instructions must be provided when content requires user input."
+---
+
+## Why it matters
+
+Placeholder text is not a substitute for labels. Screen readers may not announce placeholders consistently, and they disappear when users start typing.
+
+## React examples
+
+### Do: Use visible labels
+
+```tsx
+<label htmlFor="search">Search</label>
+<input id="search" type="search" />
+```
+
+### Do: Use aria-label when a visible label isn't possible
+
+```tsx
+<input type="search" aria-label="Search products" />
+```
+
+### Don't: Rely on placeholder alone
+
+```tsx
+<input type="email" placeholder="Email address" />
+```
+
+## How our analyzer checks this
+
+Form inputs without an associated `<label>`, `aria-label`, or `aria-labelledby` are flagged.

@@ -1,0 +1,38 @@
+---
+title: "Info and Relationships"
+criterionId: "1.3.1"
+level: "A"
+description: "Structure and relationships must be programmatically determinable."
+---
+
+## Why it matters
+
+Assistive technologies use semantic structure to help users navigate content. Skipped heading levels and unlabeled form fields break that mental model.
+
+## React examples
+
+### Do: Use sequential headings
+
+```tsx
+<h1>Settings</h1>
+<h2>Account</h2>
+<h3>Email preferences</h3>
+```
+
+### Do: Associate labels with inputs
+
+```tsx
+<label htmlFor="email">Email</label>
+<input id="email" type="email" />
+```
+
+### Don't: Skip heading levels
+
+```tsx
+<h1>Dashboard</h1>
+<h3>Activity</h3>
+```
+
+## How our analyzer checks this
+
+We detect heading level skips and form inputs without associated labels, `aria-label`, or `aria-labelledby`.

@@ -1,0 +1,29 @@
+---
+title: "Contrast (Minimum)"
+criterionId: "1.4.3"
+level: "AA"
+description: "Text must have a contrast ratio of at least 4.5:1 against its background."
+---
+
+## Why it matters
+
+Low-contrast text is difficult to read for users with low vision or in bright environments. WCAG AA requires a 4.5:1 ratio for normal text.
+
+## React examples
+
+### Do: Use design tokens with sufficient contrast
+
+```tsx
+<p className="text-foreground bg-background">Readable body text</p>
+```
+
+### Don't: Use light gray on white
+
+```tsx
+<p className="text-gray-300 bg-white">Hard to read</p>
+```
+
+## Tips
+
+- Test color pairs with a contrast checker before shipping.
+- Don't rely on color alone to convey meaning — add text or icons too.

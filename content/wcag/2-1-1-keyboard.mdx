@@ -1,0 +1,45 @@
+---
+title: "Keyboard"
+criterionId: "2.1.1"
+level: "A"
+description: "All functionality must be operable through a keyboard interface."
+---
+
+## Why it matters
+
+Many users navigate exclusively with a keyboard or assistive devices that emulate keyboard input. Click-only interactions exclude them.
+
+## React examples
+
+### Do: Use native interactive elements
+
+```tsx
+<button type="button" onClick={handleClick}>
+  Save changes
+</button>
+```
+
+### Don't: Put click handlers on divs
+
+```tsx
+<div onClick={handleClick}>Save changes</div>
+```
+
+### If you must use a div: add keyboard support
+
+```tsx
+<div
+  role="button"
+  tabIndex={0}
+  onClick={handleClick}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") handleClick();
+  }}
+>
+  Save changes
+</div>
+```
+
+## How our analyzer checks this
+
+We flag non-interactive elements with `onClick` that lack `role`, `tabIndex`, and keyboard event handlers.

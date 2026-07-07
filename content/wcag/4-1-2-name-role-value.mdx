@@ -1,0 +1,41 @@
+---
+title: "Name, Role, Value"
+criterionId: "4.1.2"
+level: "A"
+description: "UI components must expose their name, role, and value to assistive technologies."
+---
+
+## Why it matters
+
+Icon-only buttons and custom widgets must communicate their purpose. Without an accessible name, screen reader users hear only "button" with no context.
+
+## React examples
+
+### Do: Label icon-only buttons
+
+```tsx
+<button type="button" aria-label="Close dialog">
+  <XIcon aria-hidden />
+</button>
+```
+
+### Do: Use visible text when possible
+
+```tsx
+<button type="button">
+  <PlusIcon aria-hidden />
+  Add item
+</button>
+```
+
+### Don't: Leave buttons unnamed
+
+```tsx
+<button type="button">
+  <XIcon />
+</button>
+```
+
+## How our analyzer checks this
+
+We flag `<button>` elements with no text content and no `aria-label`, `aria-labelledby`, or `title`.
