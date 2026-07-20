@@ -1,6 +1,9 @@
 import traverse, { type NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 import type { File } from "@babel/types";
+import { twMerge } from "tailwind-merge";
+
+const CLASS_MERGE_FUNCTIONS = new Set(["cn", "clsx"]);
 
 /** Walks all JSX elements in an AST. */
 export function walkJsxElements(
@@ -59,10 +62,116 @@ export function getAttributeValue(
   return null;
 }
 
+/** Returns resolved class names from className, including static cn()/clsx() calls. */
+export function resolveClassNames(opening: t.JSXOpeningElement): string {
+  const attr = opening.attributes.find((a) => {
+    if (!t.isJSXAttribute(a)) return false;
+    if (t.isJSXIdentifier(a.name)) return a.name.name === "className";
+    return false;
+  });
+
+  if (!attr || !t.isJSXAttribute(attr) || !attr.value) return "";
+
+  if (t.isStringLiteral(attr.value)) {
+    return attr.value.value;
+  }
+
+  if (t.isJSXExpressionContainer(attr.value)) {
+    const expr = attr.value.expression;
+    if (t.isStringLiteral(expr)) return expr.value;
+    const resolved = resolveStaticClassExpression(expr);
+    if (resolved !== null) return twMerge(resolved);
+  }
+
+  return "";
+}
+
 /** Returns class names from className attribute as a string. */
 export function getClassNames(opening: t.JSXOpeningElement): string {
-  const value = getAttributeValue(opening, "className");
-  return value ?? "";
+  return resolveClassNames(opening);
+}
+
+/** Folds static cn()/clsx()/array/object class expressions into a class string. */
+export function resolveStaticClassExpression(expr: t.Node): string | null {
+  if (t.isStringLiteral(expr)) return expr.value;
+
+  if (t.isBooleanLiteral(expr)) return null;
+
+  if (t.isCallExpression(expr)) {
+    const calleeName = getCallExpressionName(expr.callee);
+    if (calleeName && CLASS_MERGE_FUNCTIONS.has(calleeName)) {
+      const parts = expr.arguments
+        .map((arg) => resolveStaticClassExpression(arg))
+        .filter((part): part is string => part !== null && part.length > 0);
+      return parts.length > 0 ? parts.join(" ") : null;
+    }
+  }
+
+  if (t.isArrayExpression(expr)) {
+    const parts = expr.elements.flatMap((element) => {
+      if (!element || t.isSpreadElement(element)) return [];
+      const resolved = resolveStaticClassExpression(element);
+      return resolved ? [resolved] : [];
+    });
+    return parts.length > 0 ? parts.join(" ") : null;
+  }
+
+  if (t.isObjectExpression(expr)) {
+    const parts: string[] = [];
+    for (const prop of expr.properties) {
+      if (!t.isObjectProperty(prop)) continue;
+      const key = getObjectPropertyKey(prop);
+      if (!key) continue;
+      if (isTruthyStaticExpression(prop.value)) {
+        parts.push(key);
+      }
+    }
+    return parts.length > 0 ? parts.join(" ") : null;
+  }
+
+  if (t.isLogicalExpression(expr) && expr.operator === "&&") {
+    if (isTruthyStaticExpression(expr.left)) {
+      return resolveStaticClassExpression(expr.right);
+    }
+    return null;
+  }
+
+  if (t.isConditionalExpression(expr)) {
+    if (isTruthyStaticExpression(expr.test)) {
+      return resolveStaticClassExpression(expr.consequent);
+    }
+    if (isFalsyStaticExpression(expr.test)) {
+      return resolveStaticClassExpression(expr.alternate);
+    }
+    return null;
+  }
+
+  return null;
+}
+
+function getCallExpressionName(
+  callee: t.CallExpression["callee"],
+): string | null {
+  if (t.isIdentifier(callee)) return callee.name;
+  return null;
+}
+
+function getObjectPropertyKey(prop: t.ObjectProperty): string | null {
+  if (t.isIdentifier(prop.key)) return prop.key.name;
+  if (t.isStringLiteral(prop.key)) return prop.key.value;
+  return null;
+}
+
+function isTruthyStaticExpression(expr: t.Node): boolean {
+  if (t.isBooleanLiteral(expr)) return expr.value;
+  if (t.isNumericLiteral(expr)) return expr.value !== 0;
+  if (t.isStringLiteral(expr)) return expr.value.length > 0;
+  if (t.isNullLiteral(expr)) return false;
+  return false;
+}
+
+function isFalsyStaticExpression(expr: t.Node): boolean {
+  return isTruthyStaticExpression(expr) === false && (t.isBooleanLiteral(expr) || t.isNullLiteral(expr));
 }
 
 /** Splits a className string into individual utility tokens. */

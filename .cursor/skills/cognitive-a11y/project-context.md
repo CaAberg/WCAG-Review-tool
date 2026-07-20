@@ -2,53 +2,31 @@
 
 ## Finding message style (analyzer output)
 
-Findings are defined in `lib/a11y/rules/*.ts` and displayed in `components/analyzer/results-panel.tsx`.
+Findings are defined in `lib/a11y/rules/*.ts` and `lib/a11y/runtime/focus-not-obscured.ts`, displayed in `components/analyzer/results-panel.tsx`.
 
 **Current pattern (good):**
-- `message`: Specific element + problem — e.g. `"<img> element is missing an alt attribute."`
+- `message`: Specific element + problem
 - `suggestion`: Copy-ready fix code
-- Severity badge: `blocking` or `enhancement` (with color + text)
+- Severity badge: "Must fix" / "Should fix" via `getSeverityLabel`
+- **Live preview** badge for runtime findings (2.4.11)
 - Grouped by criterion with description + "Read guide" link
-
-**Improvements to aim for:**
-- User-facing severity labels: "Must fix" / "Should fix" alongside technical terms
-- Brief "why it matters" in message (one clause), not just what's wrong
-- Avoid exposing raw rule IDs to users in primary UI
 
 ## Guide writing tone (MDX)
 
-Follow existing pattern in `content/wcag/1-1-1-non-text-content.mdx`:
-
-1. **Why it matters** — one paragraph, user impact focus
-2. **React examples** — Do/Don't with code blocks
-3. **How our analyzer checks this** — only when a rule exists
-
-Use plain language. Define WCAG terms on first use in each guide.
+Guides for 1.4.3 and 2.4.11 document static vs live preview analyzer behavior. Use plain language and define WCAG terms on first use.
 
 ## UI copy locations
 
 | Location | File | Cognitive focus |
 |----------|------|-----------------|
 | Parse errors | `results-panel.tsx` | Clear next step: "Fix syntax errors and try again" |
+| Preview skipped | `results-panel.tsx` | Non-alarming status when iframe check unavailable |
 | Empty results | `results-panel.tsx` | Positive reinforcement; note rule set scope |
-| Auth prompts | `components/auth/` | Simple sign-in instructions |
-| Landing page | `app/page.tsx` | Clear value prop, numbered "How it works" |
-| Toast messages | `results-panel.tsx` | "Suggestion copied to clipboard" — confirms action |
+| Mobile nav | `site-header-mobile-nav.tsx` | "Open menu" / "Close menu" labels |
 
-## 3.2.6 Consistent Help — gap
+## 3.2.6 Consistent Help
 
-No dedicated help/contact link in consistent location across all pages. Guides serve as help content but are nav-linked as "Guides" not "Help". Consider:
-- Adding `/guides` as help destination with consistent label
-- Or footer link: "Accessibility Help" on every page
-
-## Severity mapping for future UI
-
-| Internal (`FindingSeverity`) | Suggested user label |
-|------------------------------|---------------------|
-| `blocking` | Must fix |
-| `enhancement` | Should fix |
-
-Both should remain visible as text (not color-only) — current Badge component already shows text.
+Help nav link (`aria-label="Help — WCAG accessibility guides"`) points to `/guides` on desktop and mobile.
 
 ## Results panel accessibility (already good)
 

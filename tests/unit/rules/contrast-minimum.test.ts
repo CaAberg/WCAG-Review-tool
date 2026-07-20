@@ -45,7 +45,7 @@ describe("contrastMinimumRule", () => {
     expect(findings[0]?.message).toContain("text-gray-300");
   });
 
-  it("passes design-token-like classes not in the lookup table", () => {
+  it("passes semantic design token pairs with sufficient contrast", () => {
     const findings = analyze(`
       export function X() {
         return <p className="text-foreground bg-background">Token text</p>;
@@ -53,5 +53,26 @@ describe("contrastMinimumRule", () => {
     `);
 
     expect(findings).toHaveLength(0);
+  });
+
+  it("flags low-contrast semantic design token pairs", () => {
+    const findings = analyze(`
+      export function X() {
+        return <p className="text-muted bg-background">Token text</p>;
+      }
+    `);
+
+    expect(findings.some((f) => f.ruleId === "contrast-minimum")).toBe(true);
+    expect(findings[0]?.message).toContain("text-muted");
+  });
+
+  it("resolves cn() class names for contrast checks", () => {
+    const findings = analyze(`
+      export function X() {
+        return <p className={cn("text-gray-300", "bg-white")}>Muted</p>;
+      }
+    `);
+
+    expect(findings.some((f) => f.ruleId === "contrast-minimum")).toBe(true);
   });
 });

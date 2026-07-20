@@ -2,8 +2,13 @@ import type { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 import {
   failsContrastMinimum,
+  getContrastRatio,
   isLargeTextClass,
 } from "../contrast-utils";
+import {
+  findBackgroundTokenColor,
+  findTextTokenColor,
+} from "../design-tokens";
 import {
   findFailingTailwindPair,
 } from "../tailwind-contrast-pairs";
@@ -92,6 +97,28 @@ export const contrastMinimumRule: A11yRule = {
           element: tag,
           suggestion: `<${tag} className="text-foreground bg-background">Readable text</${tag}>`,
         });
+        return;
+      }
+
+      const textToken = findTextTokenColor(classTokens);
+      const bgToken = findBackgroundTokenColor(classTokens);
+      if (textToken && bgToken) {
+        const ratio = getContrastRatio(textToken.hex, bgToken.hex);
+        if (
+          ratio !== null &&
+          failsContrastMinimum(textToken.hex, bgToken.hex, isLargeText)
+        ) {
+          findings.push({
+            ruleId: "contrast-minimum",
+            message: `<${tag}> likely has low contrast (${textToken.tokenClass} on ${bgToken.tokenClass}, ${ratio.toFixed(1)}:1). Low-contrast text is hard to read for users with low vision.`,
+            severity: "blocking",
+            wcagCriteria: ["1.4.3"],
+            line: loc.line,
+            column: loc.column,
+            element: tag,
+            suggestion: `<${tag} className="text-foreground bg-background">Readable text</${tag}>`,
+          });
+        }
       }
     });
 

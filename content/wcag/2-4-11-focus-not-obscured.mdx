@@ -30,6 +30,18 @@ When keyboard users tab through a page, the focused element must remain visible.
 <div className="fixed inset-0 z-50">{/* blocks view of focused elements behind */}</div>
 ```
 
+## How our analyzer checks this
+
+After static analysis, the analyzer runs a **live preview** of your exported component in a hidden iframe. It tabs through focusable elements and measures whether sticky or fixed overlays fully cover the focused control (WCAG 2.4.11 AA).
+
+Runtime findings appear with a **Live preview** badge in the results panel.
+
+### Preview limitations
+
+- Export a named component function (for example `export function Demo()`).
+- Unknown imports are stubbed; complex dependencies may skip preview with an error.
+- Light-theme CSS only; dark mode overlap is not checked statically.
+
 ## Manual testing
 
 This criterion requires runtime testing — static TSX analysis cannot detect sticky overlap. To verify:
@@ -39,4 +51,4 @@ This criterion requires runtime testing — static TSX analysis cannot detect st
 3. Check with sticky headers, footers, and modals open.
 4. Test at mobile viewport widths where sticky UI is common.
 
-There is no analyzer rule for this criterion yet.
+Supplement the live preview check with manual keyboard testing on the full page layout.

@@ -25,12 +25,16 @@ export type A11yFinding = {
   column: number;
   element: string;
   suggestion: string;
+  /** Origin of the finding — static AST rules or live preview runtime checks. */
+  source?: "static" | "preview";
 };
 
 /** Result of parsing and analyzing TSX source code. */
 export type AnalyzeResult = {
   findings: A11yFinding[];
   parseError?: string;
+  runtimeFindings?: A11yFinding[];
+  previewError?: string;
 };
 
 /** Context passed to each static analysis rule. */

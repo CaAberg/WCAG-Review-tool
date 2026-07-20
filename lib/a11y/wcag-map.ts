@@ -94,3 +94,6 @@ export function getGuidePath(criterionId: string): string {
 export function getAllCriteria(): WcagCriterion[] {
   return Object.values(WCAG_CRITERIA);
 }
+
+/** WCAG criterion IDs checked at runtime via live preview. */
+export const RUNTIME_WCAG_CRITERIA = new Set(["2.4.11"]);

@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 export type ResultsPanelProps = {
   findings: A11yFinding[];
   parseError?: string | null;
+  previewError?: string | null;
   isLoading?: boolean;
   className?: string;
 };
@@ -36,6 +37,7 @@ export type ResultsPanelProps = {
 export function ResultsPanel({
   findings,
   parseError,
+  previewError,
   isLoading = false,
   className,
 }: ResultsPanelProps) {
@@ -106,6 +108,11 @@ export function ResultsPanel({
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {previewError && (
+          <p className="mb-4 text-sm text-muted-foreground" role="status">
+            Live preview check skipped: {previewError}
+          </p>
+        )}
         <Accordion type="multiple" className="w-full">
           {Array.from(grouped.entries()).map(([criterionId, items]) => {
             const criterion = WCAG_CRITERIA[criterionId];
@@ -150,6 +157,9 @@ export function ResultsPanel({
                           >
                             {getSeverityLabel(finding.severity)}
                           </Badge>
+                          {finding.source === "preview" && (
+                            <Badge variant="outline">Live preview</Badge>
+                          )}
                           <span className="font-mono text-xs text-muted-foreground">
                             Line {finding.line}:{finding.column}
                           </span>

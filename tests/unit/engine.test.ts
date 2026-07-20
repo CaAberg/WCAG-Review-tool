@@ -86,6 +86,24 @@ describe("analyzeTsx", () => {
     );
   });
 
+  it("flags outline-none without focus replacement in cn()", () => {
+    const code = `export function X() { return <button className={cn("outline-none")}>Go</button>; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "focus-visible")).toBe(
+      true,
+    );
+  });
+
+  it("passes outline-none with focus-visible ring via cn()", () => {
+    const code = `export function X() { return <button className={cn("outline-none", "focus-visible:ring-2")}>Go</button>; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "focus-visible")).toBe(
+      false,
+    );
+  });
+
   it("returns parse error for invalid syntax", () => {
     const result = analyzeTsx("export function {{{");
 

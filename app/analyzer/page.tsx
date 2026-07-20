@@ -27,7 +27,8 @@ export default async function AnalyzerPage({
         </h1>
         <p className="mt-2 text-muted-foreground">
           Paste your TSX component below and run static accessibility checks
-          mapped to WCAG 2.2 criteria, including contrast and target size.
+          mapped to WCAG 2.2 criteria, plus a live preview check for focus
+          obscured (2.4.11).
         </p>
       </div>
       <AnalyzerWorkspace

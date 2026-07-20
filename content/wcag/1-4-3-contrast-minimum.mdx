@@ -29,8 +29,10 @@ The analyzer flags:
 
 - **Inline styles** with statically known `color` and `backgroundColor` values that fall below 4.5:1 (3:1 for large text classes like `text-lg`).
 - **Known failing Tailwind pairs** such as `text-gray-300` on `bg-white`.
+- **Semantic design tokens** from `app/globals.css` (light theme only), such as `text-foreground` on `bg-background`, when the resolved ratio is below 4.5:1.
+- **`cn()` / `clsx()` calls** with statically known arguments — dynamic conditions are skipped.
 
-It cannot resolve dynamic classes from `cn()`, CSS variables, or custom design tokens — verify those with a contrast checker before shipping.
+Dark mode token values are not inferred statically; verify dark-theme pairs manually or in the browser.
 
 ## Tips
 

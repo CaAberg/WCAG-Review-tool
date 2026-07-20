@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getCriteriaWithRules } from "@/lib/a11y/rules";
+import { RUNTIME_WCAG_CRITERIA } from "@/lib/a11y/wcag-map";
 import { getAllGuides } from "@/lib/content/guides";
 
 export const metadata: Metadata = {
@@ -20,6 +21,9 @@ export const metadata: Metadata = {
 export default function GuidesPage() {
   const guides = getAllGuides();
   const criteriaWithRules = getCriteriaWithRules();
+  for (const criterionId of RUNTIME_WCAG_CRITERIA) {
+    criteriaWithRules.add(criterionId);
+  }
 
   const analyzerGuides = guides.filter((g) =>
     criteriaWithRules.has(g.criterionId),
