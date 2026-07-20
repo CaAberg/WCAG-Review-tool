@@ -36,6 +36,12 @@ describe("ResultsPanel", () => {
     render(<ResultsPanel findings={[sampleFinding]} />);
     expect(screen.getByText(/1 issue found/)).toBeInTheDocument();
     expect(screen.getByText("1.1.1")).toBeInTheDocument();
+    expect(screen.getByText(/must fix/i)).toBeInTheDocument();
+  });
+
+  it("shows dynamic rule count in empty state", () => {
+    render(<ResultsPanel findings={[]} />);
+    expect(screen.getByText(/analyzer checks/i)).toBeInTheDocument();
   });
 
   it("copies suggestion to clipboard", async () => {

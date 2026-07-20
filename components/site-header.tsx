@@ -38,8 +38,9 @@ export function SiteHeader({ className }: SiteHeaderProps) {
               <Link
                 href="/guides"
                 className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                aria-label="Help — WCAG accessibility guides"
               >
-                Guides
+                Help
               </Link>
             </li>
             <li>

@@ -1,0 +1,36 @@
+---
+title: "Consistent Help"
+criterionId: "3.2.6"
+level: "A"
+description: "Help mechanisms must appear in the same relative order on each page."
+---
+
+## Why it matters
+
+When help is always in the same place, users do not have to hunt for it on every page. This reduces cognitive load and supports people who rely on predictable navigation.
+
+## React examples
+
+### Do: Place help in the same nav region on every page
+
+```tsx
+<nav aria-label="Main navigation">
+  <Link href="/analyzer">Analyzer</Link>
+  <Link href="/guides" aria-label="Help — WCAG accessibility guides">
+    Help
+  </Link>
+</nav>
+```
+
+### Don't: Move help to different locations per page
+
+```tsx
+{/* Home page: help in footer only */}
+{/* Analyzer page: help buried in settings */}
+```
+
+## How WCAG Access meets this
+
+WCAG Access provides a **Help** link in the main site header on every page. It always points to the WCAG guides at `/guides`, which explain success criteria and how the analyzer checks them.
+
+There is no automated check for this criterion in pasted TSX — it applies to your app's navigation structure.

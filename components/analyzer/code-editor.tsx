@@ -19,8 +19,9 @@ const defaultSample = `export function BadExample() {
       <h1>Dashboard</h1>
       <h3>Recent activity</h3>
       <img src="/chart.png" />
+      <p className="text-gray-300 bg-white">Hard to read summary</p>
       <div onClick={() => alert("clicked")}>Click me</div>
-      <button><CloseIcon /></button>
+      <button className="h-4 w-4"><CloseIcon /></button>
       <input type="text" placeholder="Email" />
     </div>
   );

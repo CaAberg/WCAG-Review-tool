@@ -18,6 +18,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { groupFindingsByCriterion } from "@/lib/a11y/engine";
+import { getRuleCount } from "@/lib/a11y/rules";
+import { getSeverityLabel } from "@/lib/a11y/severity-labels";
 import { getGuidePath, WCAG_CRITERIA } from "@/lib/a11y/wcag-map";
 import type { A11yFinding } from "@/lib/a11y/types";
 import { cn } from "@/lib/utils";
@@ -36,6 +39,8 @@ export function ResultsPanel({
   isLoading = false,
   className,
 }: ResultsPanelProps) {
+  const ruleCount = getRuleCount();
+
   if (isLoading) {
     return (
       <Card className={className} aria-live="polite" aria-busy="true">
@@ -74,25 +79,20 @@ export function ResultsPanel({
         <CardHeader>
           <CardTitle>No issues found</CardTitle>
           <CardDescription>
-            Great work! No issues were detected by the current rule set.
+            Great work! No issues were detected by the current {ruleCount}{" "}
+            analyzer checks. Some WCAG criteria still require manual testing.
           </CardDescription>
         </CardHeader>
       </Card>
     );
   }
 
-  const grouped = new Map<string, A11yFinding[]>();
-  for (const finding of findings) {
-    for (const criterion of finding.wcagCriteria) {
-      const list = grouped.get(criterion) ?? [];
-      list.push(finding);
-      grouped.set(criterion, list);
-    }
-  }
+  const grouped = groupFindingsByCriterion(findings);
 
-  const blockingCount = findings.filter(
+  const mustFixCount = findings.filter(
     (f) => f.severity === "blocking",
   ).length;
+  const shouldFixCount = findings.length - mustFixCount;
 
   return (
     <Card className={className} aria-live="polite">
@@ -101,8 +101,8 @@ export function ResultsPanel({
           {findings.length} issue{findings.length === 1 ? "" : "s"} found
         </CardTitle>
         <CardDescription>
-          {blockingCount} blocking (WCAG AA) · {findings.length - blockingCount}{" "}
-          enhancement
+          {mustFixCount} must fix · {shouldFixCount} should fix — review each
+          item below and apply the suggested fix.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -148,7 +148,7 @@ export function ResultsPanel({
                                 : "secondary"
                             }
                           >
-                            {finding.severity}
+                            {getSeverityLabel(finding.severity)}
                           </Badge>
                           <span className="font-mono text-xs text-muted-foreground">
                             Line {finding.line}:{finding.column}

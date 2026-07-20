@@ -36,8 +36,8 @@ export const buttonNameRule: A11yRule = {
         findings.push({
           ruleId: "button-name",
           message: iconOnly
-            ? "Icon-only button is missing an accessible name."
-            : "Button has no discernible text.",
+            ? "Icon-only button is missing an accessible name. Screen reader users will hear \"button\" with no context."
+            : "Button has no discernible text. Screen reader users will not know what this button does.",
           severity: "blocking",
           wcagCriteria: ["4.1.2"],
           line: loc.line,

@@ -5,6 +5,7 @@ import type { AnalyzeResult, RuleContext } from "./types";
 
 export type { AnalyzeResult, A11yFinding, SavedAudit } from "./types";
 export { WCAG_CRITERIA, getGuidePath, getAllCriteria } from "./wcag-map";
+export { getCriteriaWithRules, getRuleCount } from "./rules";
 export { MAX_SOURCE_LENGTH } from "./parser";
 
 /** Runs all static accessibility rules against TSX source code. */

@@ -1,0 +1,42 @@
+---
+title: "Focus Not Obscured (Minimum)"
+criterionId: "2.4.11"
+level: "AA"
+description: "Focused elements must not be entirely hidden by sticky headers, footers, or other author-created content."
+---
+
+## Why it matters
+
+When keyboard users tab through a page, the focused element must remain visible. Sticky navigation bars, cookie banners, and chat widgets often cover focused controls, making keyboard navigation impossible to follow.
+
+## React examples
+
+### Do: Ensure sticky headers leave room for focused content
+
+```tsx
+<header className="sticky top-0 z-10">...</header>
+<main className="scroll-mt-16">{/* scroll-margin offsets focus into view */}</main>
+```
+
+### Do: Use `scroll-margin` on focusable sections
+
+```tsx
+<button className="scroll-mt-20 focus-visible:ring-2">Submit</button>
+```
+
+### Don't: Let fixed overlays cover the entire viewport on focus
+
+```tsx
+<div className="fixed inset-0 z-50">{/* blocks view of focused elements behind */}</div>
+```
+
+## Manual testing
+
+This criterion requires runtime testing — static TSX analysis cannot detect sticky overlap. To verify:
+
+1. Tab through the page with only the keyboard.
+2. Confirm each focused element is at least partially visible.
+3. Check with sticky headers, footers, and modals open.
+4. Test at mobile viewport widths where sticky UI is common.
+
+There is no analyzer rule for this criterion yet.

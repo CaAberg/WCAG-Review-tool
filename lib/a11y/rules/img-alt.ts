@@ -28,7 +28,8 @@ export const imgAltRule: A11yRule = {
         const loc = getLocation(opening);
         findings.push({
           ruleId: "image-alt",
-          message: "<img> element is missing an alt attribute.",
+          message:
+            "<img> element is missing an alt attribute. Screen readers cannot describe images without alt text.",
           severity: "blocking",
           wcagCriteria: ["1.1.1"],
           line: loc.line,

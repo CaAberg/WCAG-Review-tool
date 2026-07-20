@@ -23,6 +23,15 @@ Low-contrast text is difficult to read for users with low vision or in bright en
 <p className="text-gray-300 bg-white">Hard to read</p>
 ```
 
+## How our analyzer checks this
+
+The analyzer flags:
+
+- **Inline styles** with statically known `color` and `backgroundColor` values that fall below 4.5:1 (3:1 for large text classes like `text-lg`).
+- **Known failing Tailwind pairs** such as `text-gray-300` on `bg-white`.
+
+It cannot resolve dynamic classes from `cn()`, CSS variables, or custom design tokens — verify those with a contrast checker before shipping.
+
 ## Tips
 
 - Test color pairs with a contrast checker before shipping.

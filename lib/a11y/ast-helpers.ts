@@ -65,6 +65,81 @@ export function getClassNames(opening: t.JSXOpeningElement): string {
   return value ?? "";
 }
 
+/** Splits a className string into individual utility tokens. */
+export function parseClassTokens(classNames: string): string[] {
+  return classNames.split(/\s+/).filter(Boolean);
+}
+
+/** Extracts statically known inline style properties from a JSX style attribute. */
+export function getInlineStyleProperties(
+  opening: t.JSXOpeningElement,
+): Record<string, string> {
+  const attr = opening.attributes.find((a) => {
+    if (!t.isJSXAttribute(a)) return false;
+    if (t.isJSXIdentifier(a.name)) return a.name.name === "style";
+    return false;
+  });
+
+  if (!attr || !t.isJSXAttribute(attr) || !attr.value) return {};
+
+  if (!t.isJSXExpressionContainer(attr.value)) return {};
+
+  const expr = attr.value.expression;
+  if (t.isObjectExpression(expr)) {
+    return parseObjectExpression(expr);
+  }
+
+  return {};
+}
+
+function parseObjectExpression(
+  object: t.ObjectExpression,
+): Record<string, string> {
+  const styles: Record<string, string> = {};
+
+  for (const prop of object.properties) {
+    if (!t.isObjectProperty(prop)) continue;
+
+    let key: string | null = null;
+    if (t.isIdentifier(prop.key)) {
+      key = prop.key.name;
+    } else if (t.isStringLiteral(prop.key)) {
+      key = prop.key.value;
+    }
+    if (!key) continue;
+
+    const value = getStaticExpressionValue(prop.value);
+    if (value !== null) {
+      styles[key] = value;
+    }
+  }
+
+  return styles;
+}
+
+function getStaticExpressionValue(value: t.Node): string | null {
+  if (t.isStringLiteral(value)) return value.value;
+  if (t.isNumericLiteral(value)) return String(value.value);
+  return null;
+}
+
+/** Returns a single inline style property when statically known. */
+export function getInlineStyleProperty(
+  opening: t.JSXOpeningElement,
+  property: string,
+): string | null {
+  const styles = getInlineStyleProperties(opening);
+  return styles[property] ?? null;
+}
+
+/** Returns the value of a string JSX attribute when statically known (e.g. role). */
+export function getJsxAttributeValue(
+  opening: t.JSXOpeningElement,
+  attrName: string,
+): string | null {
+  return getAttributeValue(opening, attrName);
+}
+
 /** Returns line/column location for a JSX node. */
 export function getLocation(node: t.Node): { line: number; column: number } {
   return {

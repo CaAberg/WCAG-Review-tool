@@ -16,7 +16,7 @@ export default function HomePage() {
           Build accessible apps with confidence
         </h1>
         <p className="mt-6 text-lg text-muted-foreground">
-          Paste your React components and get instant WCAG-aligned suggestions.
+          Paste your React components and get instant WCAG 2.2-aligned suggestions.
           Learn what to fix, why it matters, and how to improve your UI for
           everyone.
         </p>

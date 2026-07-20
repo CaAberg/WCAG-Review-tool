@@ -52,6 +52,40 @@ describe("analyzeTsx", () => {
     );
   });
 
+  it("flags low-contrast Tailwind text pairs", () => {
+    const code = `export function X() { return <p className="text-gray-300 bg-white">Text</p>; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "contrast-minimum")).toBe(
+      true,
+    );
+  });
+
+  it("flags inline color styles below contrast minimum", () => {
+    const code = `export function X() { return <p style={{ color: "#cccccc", backgroundColor: "#ffffff" }}>Text</p>; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "contrast-minimum")).toBe(
+      true,
+    );
+  });
+
+  it("flags tiny interactive targets", () => {
+    const code = `export function X() { return <button className="h-4 w-4">X</button>; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "target-size")).toBe(true);
+  });
+
+  it("flags decorative images with empty alt and no role", () => {
+    const code = `export function X() { return <img src="/d.svg" alt="" />; }`;
+    const result = analyzeTsx(code);
+
+    expect(result.findings.some((f) => f.ruleId === "image-redundant-alt")).toBe(
+      true,
+    );
+  });
+
   it("returns parse error for invalid syntax", () => {
     const result = analyzeTsx("export function {{{");
 

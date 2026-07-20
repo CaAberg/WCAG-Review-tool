@@ -1,6 +1,6 @@
 import type { WcagCriterion } from "./types";
 
-/** WCAG 2.1 criteria referenced by static analysis rules. */
+/** WCAG 2.2 criteria referenced by guides and static analysis rules. */
 export const WCAG_CRITERIA: Record<string, WcagCriterion> = {
   "1.1.1": {
     id: "1.1.1",
@@ -42,6 +42,30 @@ export const WCAG_CRITERIA: Record<string, WcagCriterion> = {
       "Any keyboard operable user interface has a mode of operation where the keyboard focus indicator is visible.",
     guideSlug: "2-4-7-focus-visible",
   },
+  "2.4.11": {
+    id: "2.4.11",
+    name: "Focus Not Obscured (Minimum)",
+    level: "AA",
+    description:
+      "When a user interface component receives keyboard focus, the component is not entirely hidden by author-created content.",
+    guideSlug: "2-4-11-focus-not-obscured",
+  },
+  "2.5.8": {
+    id: "2.5.8",
+    name: "Target Size (Minimum)",
+    level: "AA",
+    description:
+      "Target size for pointer inputs is at least 24 by 24 CSS pixels, except where spacing or equivalent alternatives apply.",
+    guideSlug: "2-5-8-target-size-minimum",
+  },
+  "3.2.6": {
+    id: "3.2.6",
+    name: "Consistent Help",
+    level: "A",
+    description:
+      "Help mechanisms are available in the same relative order on each page within a set of web pages.",
+    guideSlug: "3-2-6-consistent-help",
+  },
   "3.3.2": {
     id: "3.3.2",
     name: "Labels or Instructions",
@@ -66,7 +90,7 @@ export function getGuidePath(criterionId: string): string {
   return criterion ? `/guides/${criterion.guideSlug}` : "/guides";
 }
 
-/** Returns all criteria covered by the current rule set. */
+/** Returns all criteria covered by guides. */
 export function getAllCriteria(): WcagCriterion[] {
   return Object.values(WCAG_CRITERIA);
 }

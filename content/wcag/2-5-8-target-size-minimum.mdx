@@ -1,0 +1,40 @@
+---
+title: "Target Size (Minimum)"
+criterionId: "2.5.8"
+level: "AA"
+description: "Pointer targets must be at least 24×24 CSS pixels, unless spacing or equivalent alternatives apply."
+---
+
+## Why it matters
+
+Small touch targets are hard to tap on phones and tablets, especially for users with tremors or limited dexterity. WCAG 2.2 requires a minimum target size of 24×24 CSS pixels.
+
+## React examples
+
+### Do: Provide adequate touch/click area
+
+```tsx
+<button className="min-h-6 min-w-6 px-3 py-2">Save</button>
+```
+
+### Do: Expand hit area while keeping a small icon
+
+```tsx
+<button className="p-2" aria-label="Close">
+  <XIcon className="h-4 w-4" aria-hidden />
+</button>
+```
+
+### Don't: Use tiny fixed dimensions without padding
+
+```tsx
+<button className="h-4 w-4">
+  <XIcon />
+</button>
+```
+
+## How our analyzer checks this
+
+The analyzer flags `button`, `a`, `input`, and elements with `role="button"` that use small fixed size classes (such as `h-4`, `w-4`, or `size-4`) without compensating padding or `min-h-6` / `min-w-6` utilities.
+
+Dynamic class names from `cn()` are not evaluated — inspect those manually on mobile devices.
