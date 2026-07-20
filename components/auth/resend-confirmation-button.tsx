@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getEmailConfirmRedirectUrl } from "@/lib/supabase/site-url";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +18,11 @@ export function ResendConfirmationButton({
   const [isSending, setIsSending] = useState(false);
 
   const handleResend = async () => {
+    if (!isSupabaseConfigured()) {
+      toast.error("Supabase is not configured.");
+      return;
+    }
+
     setIsSending(true);
 
     const supabase = createClient();

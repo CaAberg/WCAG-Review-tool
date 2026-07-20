@@ -4,6 +4,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView } from "@codemirror/view";
 import { useTheme } from "next-themes";
+import { codeMirrorLayoutExtension } from "@/components/analyzer/code-editor";
 import { cn } from "@/lib/utils";
 
 export type ReadOnlyCodeViewerProps = {
@@ -25,16 +26,17 @@ export function ReadOnlyCodeViewer({
       role="group"
       aria-label={ariaLabel}
       className={cn(
-        "overflow-hidden rounded-md border border-border",
+        "h-[min(400px,50vh)] w-full min-w-0 overflow-hidden rounded-md border border-border",
         className,
       )}
     >
       <CodeMirror
         value={value}
-        height="400px"
+        height="100%"
         theme={resolvedTheme === "dark" ? "dark" : "light"}
         extensions={[
           javascript({ jsx: true, typescript: true }),
+          codeMirrorLayoutExtension,
           EditorView.editable.of(false),
           EditorView.contentAttributes.of({ "aria-label": ariaLabel }),
         ]}

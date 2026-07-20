@@ -39,7 +39,7 @@ export function SiteHeaderMobileNav() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           id={menuId}
-          className="left-auto top-0 h-full max-w-xs translate-x-0 translate-y-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed right-0 sm:rounded-none"
+          className="left-auto top-0 h-full max-w-xs translate-x-0 translate-y-0 overflow-y-auto overscroll-contain p-4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed right-0 sm:rounded-none sm:p-6"
         >
           <DialogTitle className="sr-only">Main navigation</DialogTitle>
           <DialogDescription className="sr-only">

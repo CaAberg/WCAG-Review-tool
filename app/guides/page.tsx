@@ -88,7 +88,7 @@ function GuideSection({
                 href={`/guides/${guide.slug}`}
                 className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                <Card className="h-full transition-colors hover:bg-muted/50">
+                <Card className="h-full min-w-0 transition-colors hover:bg-muted/50">
                   <CardHeader>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-mono text-sm text-primary">
@@ -99,7 +99,7 @@ function GuideSection({
                         <Badge variant="secondary">Analyzer</Badge>
                       ) : null}
                     </div>
-                    <CardTitle className="text-xl">{guide.title}</CardTitle>
+                    <CardTitle className="break-words text-xl">{guide.title}</CardTitle>
                     <CardDescription>{guide.description}</CardDescription>
                   </CardHeader>
                 </Card>

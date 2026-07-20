@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import type { A11yFinding } from "@/lib/a11y/types";
 
 const saveAuditSchema = z.object({
@@ -50,6 +51,15 @@ export function SaveAuditDialog({
   useEffect(() => {
     if (!open) return;
 
+    if (!isSupabaseConfigured()) {
+      setAuthChecked(true);
+      toast.error(
+        "Saved audits require Supabase. Copy .env.example to .env.local and add your credentials.",
+      );
+      onOpenChange(false);
+      return;
+    }
+
     const supabase = createClient();
     void supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
@@ -58,7 +68,7 @@ export function SaveAuditDialog({
         setAuthOpen(true);
       }
     });
-  }, [open]);
+  }, [open, onOpenChange]);
 
   const onSubmit = async (data: SaveAuditForm) => {
     if (!user) {
@@ -105,6 +115,8 @@ export function SaveAuditDialog({
   };
 
   const handleAuthSuccess = async () => {
+    if (!isSupabaseConfigured()) return;
+
     const supabase = createClient();
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
@@ -149,7 +161,7 @@ export function SaveAuditDialog({
                   </p>
                 )}
               </div>
-              <div className="flex justify-end gap-2">
+              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 <Button
                   type="button"
                   variant="outline"

@@ -17,13 +17,13 @@ export function SiteHeader({ className }: SiteHeaderProps) {
         className,
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 min-w-0 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+          className="flex min-w-0 items-center gap-2 font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
         >
-          <Accessibility className="h-6 w-6 text-primary" aria-hidden />
-          <span>WCAG Access</span>
+          <Accessibility className="h-6 w-6 shrink-0 text-primary" aria-hidden />
+          <span className="truncate">WCAG Access</span>
         </Link>
         <nav
           aria-label="Main navigation"

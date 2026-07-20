@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/button";
 
 /** Header navigation showing sign-in link or user email with sign-out. */
@@ -12,8 +13,14 @@ export function AuthNav() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const supabaseEnabled = isSupabaseConfigured();
 
   useEffect(() => {
+    if (!supabaseEnabled) {
+      setIsLoading(false);
+      return;
+    }
+
     const supabase = createClient();
 
     void supabase.auth.getUser().then(({ data }) => {
@@ -28,9 +35,11 @@ export function AuthNav() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabaseEnabled]);
 
   const handleSignOut = async () => {
+    if (!supabaseEnabled) return;
+
     const supabase = createClient();
     await supabase.auth.signOut();
     router.refresh();

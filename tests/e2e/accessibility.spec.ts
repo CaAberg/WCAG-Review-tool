@@ -76,6 +76,43 @@ test.describe("Mobile navigation", () => {
   });
 });
 
+test.describe("Mobile analyzer layout", () => {
+  test.use({ viewport: { width: 320, height: 568 } });
+
+  test("analyzer page has no horizontal overflow", async ({ page }) => {
+    await page.goto("/analyzer");
+    const hasOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(hasOverflow).toBe(false);
+  });
+
+  test("analyzer toolbar buttons are visible", async ({ page }) => {
+    await page.goto("/analyzer");
+    await expect(page.getByRole("button", { name: "Analyze" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
+  });
+
+  test("analyzer results render without horizontal overflow", async ({ page }) => {
+    await page.goto("/analyzer");
+    await page.getByRole("button", { name: "Analyze" }).click();
+    await expect(page.getByText(/issue/i)).toBeVisible({ timeout: 10000 });
+
+    const hasOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(hasOverflow).toBe(false);
+  });
+
+  test("unauthenticated audits page has no horizontal overflow", async ({ page }) => {
+    await page.goto("/audits");
+    const hasOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(hasOverflow).toBe(false);
+  });
+});
+
 test.describe("Auth flows", () => {
   test("unauthenticated /audits shows sign in prompt", async ({ page }) => {
     await page.goto("/audits");

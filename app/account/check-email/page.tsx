@@ -45,7 +45,7 @@ export default async function CheckEmailPage({
           </h1>
           <CardDescription>
             We sent an activation link to{" "}
-            <span className="font-medium text-foreground">{email}</span>. Click
+            <span className="break-all font-medium text-foreground">{email}</span>. Click
             the link in that email to activate your account.
           </CardDescription>
         </CardHeader>

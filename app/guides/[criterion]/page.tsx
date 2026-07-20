@@ -37,7 +37,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
   const { frontmatter, content: MdxContent } = guide;
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <article className="mx-auto min-w-0 max-w-3xl break-words px-4 py-10 sm:px-6">
       <div className="mb-8 flex flex-wrap items-center gap-2">
         <span className="font-mono text-sm text-primary">
           {frontmatter.criterionId}
@@ -53,7 +53,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         {MdxContent}
       </div>
 
-      <div className="mt-12 flex gap-4">
+      <div className="mt-12 flex flex-col gap-3 sm:flex-row">
         <Button asChild variant="outline">
           <Link href="/guides">All guides</Link>
         </Button>

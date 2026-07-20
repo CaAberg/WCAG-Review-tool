@@ -119,7 +119,7 @@ export function ResultsPanel({
             return (
               <AccordionItem key={criterionId} value={criterionId}>
                 <AccordionTrigger>
-                  <div className="flex flex-wrap items-center gap-2 text-left">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2 text-left">
                     <span className="font-mono text-sm">{criterionId}</span>
                     <span>{criterion?.name ?? "WCAG Criterion"}</span>
                     {criterion && (
@@ -174,7 +174,7 @@ export function ResultsPanel({
                           </p>
                           <pre
                             className={cn(
-                              "mt-1 overflow-x-auto rounded-md bg-muted p-3 text-xs font-mono",
+                              "mt-1 max-w-full overflow-x-auto break-words rounded-md bg-muted p-3 text-xs font-mono",
                             )}
                           >
                             {finding.suggestion}
@@ -183,7 +183,7 @@ export function ResultsPanel({
                             type="button"
                             variant="outline"
                             size="sm"
-                            className="mt-2"
+                            className="mt-2 min-h-11"
                             onClick={() => {
                               void navigator.clipboard.writeText(
                                 finding.suggestion,

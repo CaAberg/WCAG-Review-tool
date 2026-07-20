@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getEmailConfirmRedirectUrl } from "@/lib/supabase/site-url";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,6 +131,13 @@ export function AuthForm({
 
   return (
     <div className={cn(className)}>
+      {!isSupabaseConfigured() ? (
+        <p className="text-sm text-muted-foreground">
+          Supabase is not configured. Copy <code>.env.example</code> to{" "}
+          <code>.env.local</code> and add your project credentials to enable
+          sign-in and saved audits.
+        </p>
+      ) : (
       <Tabs defaultValue="signin">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signin">Sign in</TabsTrigger>
@@ -266,6 +274,7 @@ export function AuthForm({
           </form>
         </TabsContent>
       </Tabs>
+      )}
     </div>
   );
 }

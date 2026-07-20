@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import type { A11yFinding } from "@/lib/a11y/types";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuditRow = {
@@ -11,13 +12,7 @@ export type AuditRow = {
   created_at: string;
 };
 
-/** Returns true when Supabase environment variables are configured. */
-export function isSupabaseConfigured(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  );
-}
+export { isSupabaseConfigured };
 
 /** In-memory fallback store for unit tests only. */
 const memoryAudits: AuditRow[] = [];

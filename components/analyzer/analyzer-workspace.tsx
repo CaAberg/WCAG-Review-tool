@@ -87,47 +87,51 @@ export function AnalyzerWorkspace({
   }, [code]);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
+    <>
       <PreviewFrame />
-      <section aria-labelledby="editor-heading">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 id="editor-heading" className="text-lg font-semibold">
-            Component Code
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              onClick={() => void runAnalysis()}
-              disabled={isLoading}
-            >
-              <Play className="h-4 w-4" aria-hidden />
-              Analyze
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setSaveOpen(true)}
-              disabled={isLoading}
-            >
-              <Save className="h-4 w-4" aria-hidden />
-              Save
-            </Button>
+      <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
+        <section aria-labelledby="editor-heading" className="min-w-0">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 id="editor-heading" className="text-lg font-semibold">
+              Component Code
+            </h2>
+            <div className="flex w-full gap-2 sm:w-auto">
+              <Button
+                type="button"
+                className="flex-1 sm:flex-none"
+                onClick={() => void runAnalysis()}
+                disabled={isLoading}
+              >
+                <Play className="h-4 w-4" aria-hidden />
+                Analyze
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 sm:flex-none"
+                onClick={() => setSaveOpen(true)}
+                disabled={isLoading}
+              >
+                <Save className="h-4 w-4" aria-hidden />
+                Save
+              </Button>
+            </div>
           </div>
-        </div>
-        <CodeEditor value={code} onChange={setCode} />
-      </section>
+          <CodeEditor value={code} onChange={setCode} />
+        </section>
 
-      <section aria-labelledby="results-heading">
-        <h2 id="results-heading" className="sr-only">
-          Analysis Results
-        </h2>
-        <ResultsPanel
-          findings={findings}
-          parseError={parseError}
-          previewError={previewError}
-          isLoading={isLoading}
-        />
-      </section>
+        <section aria-labelledby="results-heading" className="min-w-0">
+          <h2 id="results-heading" className="sr-only">
+            Analysis Results
+          </h2>
+          <ResultsPanel
+            findings={findings}
+            parseError={parseError}
+            previewError={previewError}
+            isLoading={isLoading}
+          />
+        </section>
+      </div>
 
       <SaveAuditDialog
         open={saveOpen}
@@ -135,6 +139,6 @@ export function AnalyzerWorkspace({
         code={code}
         findings={findings}
       />
-    </div>
+    </>
   );
 }

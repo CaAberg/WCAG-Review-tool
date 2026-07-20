@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getSessionUser } from "@/lib/supabase/audits";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { AccountSignOutButton } from "@/components/auth/account-sign-out-button";
 
 export const metadata: Metadata = {
@@ -30,6 +31,28 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
 
   if (user && callbackUrl) {
     redirect(callbackUrl);
+  }
+
+  if (!isSupabaseConfigured()) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-10 sm:px-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Account unavailable</CardTitle>
+            <CardDescription>
+              Sign-in and saved audits require Supabase. Copy{" "}
+              <code>.env.example</code> to <code>.env.local</code>, add your
+              project URL and anon key, then restart the dev server.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="outline">
+              <Link href="/analyzer">Back to analyzer</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   if (user) {

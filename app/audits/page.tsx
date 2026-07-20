@@ -36,14 +36,14 @@ export default async function AuditsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Audits</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">My Audits</h1>
           <p className="mt-2 text-muted-foreground">
             Your saved component accessibility analyses.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="w-full shrink-0 sm:w-auto">
           <Link href="/analyzer">New audit</Link>
         </Button>
       </div>
@@ -65,10 +65,10 @@ export default async function AuditsPage() {
                 href={`/audits/${audit.id}`}
                 className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                <Card className="transition-colors hover:bg-muted/50">
+                <Card className="min-w-0 transition-colors hover:bg-muted/50">
                   <CardHeader>
                     <div className="flex flex-wrap items-center gap-2">
-                      <CardTitle className="text-lg">{audit.title}</CardTitle>
+                      <CardTitle className="break-words text-lg">{audit.title}</CardTitle>
                       <Badge variant="secondary">
                         {audit.findings.length} issue
                         {audit.findings.length === 1 ? "" : "s"}

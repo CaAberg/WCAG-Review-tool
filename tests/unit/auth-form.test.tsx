@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
 import { AuthForm } from "@/components/auth/auth-form";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const mockPush = vi.fn();
 const mockRefresh = vi.fn();
@@ -12,6 +13,9 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("@/lib/supabase/client");
+vi.mock("@/lib/supabase/config", () => ({
+  isSupabaseConfigured: vi.fn(() => true),
+}));
 
 vi.mock("@/lib/supabase/site-url", () => ({
   getEmailConfirmRedirectUrl: () => "http://localhost:3000/auth/confirm",
@@ -19,6 +23,7 @@ vi.mock("@/lib/supabase/site-url", () => ({
 
 describe("AuthForm", () => {
   beforeEach(() => {
+    vi.mocked(isSupabaseConfigured).mockReturnValue(true);
     vi.mocked(createClient).mockReturnValue({
       auth: {
         signInWithPassword: vi.fn().mockResolvedValue({ error: null }),
@@ -41,6 +46,15 @@ describe("AuthForm", () => {
     expect(
       screen.getByRole("tab", { name: "Create account" }),
     ).toBeInTheDocument();
+  });
+
+  it("shows setup message when Supabase is not configured", () => {
+    vi.mocked(isSupabaseConfigured).mockReturnValue(false);
+
+    render(<AuthForm />);
+
+    expect(screen.getByText(/Supabase is not configured/i)).toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Sign in" })).not.toBeInTheDocument();
   });
 
   it("shows validation error for invalid email on sign in", async () => {

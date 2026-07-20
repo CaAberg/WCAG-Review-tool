@@ -44,9 +44,9 @@ export default async function AuditDetailPage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-3xl font-bold tracking-tight">{audit.title}</h1>
+            <h1 className="break-words text-2xl font-bold tracking-tight sm:text-3xl">{audit.title}</h1>
             <Badge variant="secondary">
               {audit.findings.length} issue
               {audit.findings.length === 1 ? "" : "s"}
@@ -59,7 +59,7 @@ export default async function AuditDetailPage({
             Saved {new Date(audit.created_at).toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline">
             <Link href="/audits">Back to audits</Link>
           </Button>
@@ -69,15 +69,15 @@ export default async function AuditDetailPage({
         </div>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        <section aria-labelledby="saved-code-heading">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
+        <section aria-labelledby="saved-code-heading" className="min-w-0">
           <h2 id="saved-code-heading" className="mb-4 text-lg font-semibold">
             Component Code
           </h2>
           <ReadOnlyCodeViewer value={audit.code} />
         </section>
 
-        <section aria-labelledby="saved-results-heading">
+        <section aria-labelledby="saved-results-heading" className="min-w-0">
           <h2 id="saved-results-heading" className="sr-only">
             Analysis Results
           </h2>

@@ -27,6 +27,11 @@ const defaultSample = `export function BadExample() {
   );
 }`;
 
+const codeMirrorLayoutExtension = EditorView.theme({
+  "&": { width: "100%", maxWidth: "100%" },
+  ".cm-scroller": { overflow: "auto" },
+});
+
 /** CodeMirror editor for pasting TSX component code. */
 export function CodeEditor({
   value,
@@ -41,16 +46,17 @@ export function CodeEditor({
       role="group"
       aria-label={ariaLabel}
       className={cn(
-        "overflow-hidden rounded-md border border-border",
+        "h-[min(400px,50vh)] w-full min-w-0 overflow-hidden rounded-md border border-border",
         className,
       )}
     >
       <CodeMirror
         value={value || defaultSample}
-        height="400px"
+        height="100%"
         theme={resolvedTheme === "dark" ? "dark" : "light"}
         extensions={[
           javascript({ jsx: true, typescript: true }),
+          codeMirrorLayoutExtension,
           EditorView.contentAttributes.of({ "aria-label": ariaLabel }),
         ]}
         onChange={onChange}
@@ -65,4 +71,4 @@ export function CodeEditor({
   );
 }
 
-export { defaultSample };
+export { defaultSample, codeMirrorLayoutExtension };

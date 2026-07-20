@@ -41,7 +41,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SiteHeader />
-          <main>{children}</main>
+          <main className="min-w-0">{children}</main>
           <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>

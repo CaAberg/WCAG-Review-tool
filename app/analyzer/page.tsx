@@ -20,9 +20,9 @@ export default async function AnalyzerPage({
   const savedAudit = auditId ? await loadAuditForAnalyzer(auditId) : null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto min-w-0 max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           Component Analyzer
         </h1>
         <p className="mt-2 text-muted-foreground">

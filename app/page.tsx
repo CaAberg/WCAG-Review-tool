@@ -10,12 +10,12 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <section className="mx-auto max-w-3xl text-center">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           Build accessible apps with confidence
         </h1>
-        <p className="mt-6 text-lg text-muted-foreground">
+        <p className="mt-6 break-words text-lg text-muted-foreground">
           Paste your React components and get instant WCAG 2.2-aligned suggestions.
           Learn what to fix, why it matters, and how to improve your UI for
           everyone.
@@ -71,7 +71,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mt-20 rounded-lg border border-border bg-muted/50 p-8">
+      <section className="mt-20 rounded-lg border border-border bg-muted/50 p-6 sm:p-8">
         <h2 className="text-2xl font-semibold">How it works</h2>
         <ol className="mt-6 space-y-4 text-muted-foreground">
           <li className="flex gap-3">
