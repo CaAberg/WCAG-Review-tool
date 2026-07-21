@@ -13,7 +13,7 @@ export function SiteHeader({ className }: SiteHeaderProps) {
   return (
     <header
       className={cn(
-        "border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
         className,
       )}
     >
