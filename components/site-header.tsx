@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Accessibility } from "lucide-react";
 import { AuthNav } from "@/components/auth/auth-nav";
 import { SiteHeaderMobileNav } from "@/components/site-header-mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 export type SiteHeaderProps = {
@@ -56,9 +57,15 @@ export function SiteHeader({ className }: SiteHeaderProps) {
               </Link>
             </li>
           </ul>
-          <AuthNav />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <AuthNav />
+          </div>
         </nav>
-        <SiteHeaderMobileNav />
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <SiteHeaderMobileNav />
+        </div>
       </div>
     </header>
   );

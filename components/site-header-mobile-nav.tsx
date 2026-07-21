@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { AuthNav } from "@/components/auth/auth-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,7 +23,7 @@ export function SiteHeaderMobileNav() {
   const menuId = useId();
 
   return (
-    <div className="md:hidden">
+    <>
       <Button
         type="button"
         variant="outline"
@@ -76,12 +77,13 @@ export function SiteHeaderMobileNav() {
                 </Link>
               </li>
             </ul>
-            <div className={cn("mt-6 border-t border-border pt-4")}>
+            <div className={cn("mt-6 flex flex-col gap-4 border-t border-border pt-4")}>
+              <ThemeToggle />
               <AuthNav />
             </div>
           </nav>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

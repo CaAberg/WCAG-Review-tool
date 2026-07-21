@@ -48,6 +48,34 @@ test.describe("WCAG Access site", () => {
   });
 });
 
+test.describe("Theme toggle", () => {
+  test("toggles dark class on html and passes axe", async ({ page }) => {
+    await page.goto("/");
+
+    const toggle = page
+      .getByRole("button", { name: /Switch to (dark|light) mode/ })
+      .first();
+    await expect(toggle).toBeVisible();
+
+    const initialDark = await page.evaluate(() =>
+      document.documentElement.classList.contains("dark"),
+    );
+
+    await toggle.click();
+
+    await expect
+      .poll(async () =>
+        page.evaluate(() =>
+          document.documentElement.classList.contains("dark"),
+        ),
+      )
+      .toBe(!initialDark);
+
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
+  });
+});
+
 test.describe("Mobile navigation", () => {
   test.use({ viewport: { width: 320, height: 568 } });
 
