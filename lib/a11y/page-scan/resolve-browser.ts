@@ -3,9 +3,17 @@ import os from "os";
 import path from "path";
 import type { Browser } from "playwright-core";
 import { chromium as playwrightChromium } from "playwright-core";
-import chromium from "@sparticuz/chromium";
 
 const LOCAL_LAUNCH_ARGS = ["--no-sandbox", "--disable-setuid-sandbox"];
+
+/** Matches the installed @sparticuz/chromium release pack for remote fallback. */
+const DEFAULT_CHROMIUM_PACK_URL =
+  "https://github.com/Sparticuz/chromium/releases/download/v149.0.0/chromium-v149.0.0-pack.x64.tar";
+
+const CHROMIUM_BIN_DIR = path.join(
+  process.cwd(),
+  "node_modules/@sparticuz/chromium/bin",
+);
 
 /** Returns true when running in a serverless deployment such as Vercel. */
 export function isServerlessEnvironment(): boolean {
@@ -49,6 +57,23 @@ export function findPlaywrightChromiumPath(): string | undefined {
   return undefined;
 }
 
+/** Resolves a Chromium binary for Vercel/Lambda when local bin files are missing. */
+export async function resolveServerlessExecutablePath(): Promise<string> {
+  const chromium = await import("@sparticuz/chromium");
+  const remotePackUrl =
+    process.env.CHROMIUM_REMOTE_EXEC_PATH ?? DEFAULT_CHROMIUM_PACK_URL;
+
+  if (fs.existsSync(CHROMIUM_BIN_DIR)) {
+    try {
+      return await chromium.default.executablePath(CHROMIUM_BIN_DIR);
+    } catch {
+      // Fall back to the remote pack when bundled bin files are incomplete.
+    }
+  }
+
+  return chromium.default.executablePath(remotePackUrl);
+}
+
 /** Launches Chromium for local dev or serverless page scans. */
 export async function launchScanBrowser(): Promise<Browser> {
   if (process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
@@ -60,9 +85,11 @@ export async function launchScanBrowser(): Promise<Browser> {
   }
 
   if (isServerlessEnvironment()) {
+    const chromium = await import("@sparticuz/chromium");
+
     return playwrightChromium.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
+      args: chromium.default.args,
+      executablePath: await resolveServerlessExecutablePath(),
       headless: true,
     });
   }

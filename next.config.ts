@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     "axe-core",
     "playwright-core",
   ],
+  outputFileTracingIncludes: {
+    "/api/scan": ["./node_modules/@sparticuz/chromium/**"],
+    "/api/scan/route": ["./node_modules/@sparticuz/chromium/**"],
+  },
   redirects: async () => [
     {
       source: "/analyzer",
