@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -57,22 +56,13 @@ export function ManualChecksPanel({ code, className }: ManualChecksPanelProps) {
                 <p className="mt-1 text-muted-foreground">
                   {criterion.description}
                 </p>
-                <div className="mt-2 flex flex-wrap gap-3">
+                <div className="mt-2">
                   <Link
                     href={getGuidePath(criterionId)}
                     className="text-primary underline-offset-4 hover:underline"
                   >
                     Read guide
                   </Link>
-                  <a
-                    href={criterion.understandingUrl}
-                    className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    W3C Understanding
-                    <ExternalLink className="h-3 w-3" aria-hidden />
-                  </a>
                 </div>
               </li>
             );

@@ -29,7 +29,6 @@ Review how your components meet **${criterion.id} ${criterion.name}** when autho
 
 ## Official guidance
 
-- [Understanding ${criterion.id}](${criterion.understandingUrl})
 - [WCAG quick reference](https://www.w3.org/WAI/WCAG22/quickref/#${criterion.id.replace(/\./g, "")})
 `;
 }

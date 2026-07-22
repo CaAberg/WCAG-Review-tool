@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -92,22 +91,13 @@ export default function GuidesPage() {
                           </Link>
                         </CardTitle>
                         <CardDescription>{criterion.description}</CardDescription>
-                        <div className="mt-2 flex flex-wrap gap-3 text-sm">
+                        <div className="mt-2 text-sm">
                           <Link
                             href={href}
                             className="text-primary underline-offset-4 hover:underline"
                           >
                             Read guide
                           </Link>
-                          <a
-                            href={criterion.understandingUrl}
-                            className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            W3C Understanding
-                            <ExternalLink className="h-3 w-3" aria-hidden />
-                          </a>
                         </div>
                       </CardHeader>
                     </Card>
