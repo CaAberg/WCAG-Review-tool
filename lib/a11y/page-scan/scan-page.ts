@@ -6,7 +6,7 @@ import { axeToFindings } from "./axe-to-findings";
 import { launchScanBrowser } from "./resolve-browser";
 import type { PageScanResult } from "./types";
 
-const SCAN_TIMEOUT_MS = 30_000;
+const SCAN_TIMEOUT_MS = 120_000;
 
 /** Closes Playwright resources opened for a scan. */
 async function closeScanResources(
@@ -45,6 +45,7 @@ export async function scanPage(url: string): Promise<PageScanResult> {
   try {
     context = await browser.newContext();
     const page = await context.newPage();
+    page.setDefaultTimeout(SCAN_TIMEOUT_MS);
     const response = await page.goto(url, {
       waitUntil: "domcontentloaded",
       timeout: SCAN_TIMEOUT_MS,

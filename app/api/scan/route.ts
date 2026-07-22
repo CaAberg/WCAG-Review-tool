@@ -2,7 +2,8 @@ import { z } from "zod";
 import { scanPage, validateScanUrl } from "@/lib/a11y/page-scan";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+/** Cold-start Chromium download plus page load can exceed 60s on Vercel. */
+export const maxDuration = 300;
 
 const scanRequestSchema = z.object({
   url: z.string().min(1, "URL is required.").max(2048, "URL is too long."),
