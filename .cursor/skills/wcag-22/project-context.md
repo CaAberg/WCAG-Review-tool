@@ -22,19 +22,23 @@ WCAG Access is a Next.js 15 authoring tool that analyzes pasted React/TSX static
 
 ## Currently covered criteria
 
+The analyzer registers **43 static rules** and **7 runtime preview checks** across **85 catalogued WCAG 2.1/2.2 success criteria**. See `lib/a11y/coverage-map.ts` for the full static/runtime/manual breakdown.
+
 | SC | Coverage | Rule(s) |
 |----|----------|---------|
-| 1.1.1 | Static | `image-alt`, `image-redundant-alt` |
-| 1.3.1 | Static | `heading-order`, `label` |
-| 1.4.3 | Static | `contrast-minimum` (Tailwind pairs + design tokens + cn()) |
-| 2.1.1 | Static | `click-events-have-key-events` |
-| 2.4.7 | Static | `focus-visible` (includes cn()-resolved classes) |
-| 2.4.11 | **Runtime preview** | `focus-not-obscured` |
-| 2.5.8 | Static | `target-size` |
-| 3.3.2 | Static | `label` |
-| 4.1.2 | Static | `click-events-have-key-events`, `button-name` |
+| 1.1.1 | Static | `image-alt`, `image-redundant-alt`, `svg-alt`, `input-image-alt` |
+| 1.2.1–1.2.2 | Static | `media-alternative`, `video-captions` |
+| 1.3.1 | Static | `heading-order`, `label`, `table-headers`, `list-structure`, `landmark-one-main` |
+| 1.3.4–1.3.5 | Static | `orientation-lock`, `autocomplete-attr` |
+| 1.4.2–1.4.12 | Static | `audio-autoplay`, `contrast-minimum`, `non-text-contrast`, `resize-text`, `reflow-fixed-width`, `text-spacing` |
+| 2.1.1–2.1.4 | Static/runtime | `click-events-have-key-events`, `interactive-tabindex`, `accesskey`, `focus-trap` |
+| 2.3.3 | Runtime | `reduced-motion` |
+| 2.4.1–2.4.13 | Static/runtime | `bypass-blocks`, `link-purpose`, `empty-heading-label`, `focus-visible`, `focus-not-obscured`, `focus-order`, `focus-appearance` |
+| 2.5.1–2.5.8 | Static/runtime | `pointer-gestures`, `label-in-name`, `motion-actuation`, `drag-alternative`, `target-size`, `pointer-cancellation` |
+| 3.1.1–3.3.2 | Static | `lang-page`, `lang-parts`, `on-focus-change`, `on-input-change`, `error-identification`, `required-field` |
+| 4.1.2–4.1.3 | Static | `button-name`, `iframe-title`, `duplicate-id`, `link-name`, `aria-valid`, `status-messages` |
 
-Guides without static/runtime rules: **3.2.6 Consistent Help** (implemented in site nav).
+Remaining criteria have MDX guides and appear in the analyzer **manual checks** panel when relevant patterns are detected (e.g. `<video>` → 1.2.x).
 
 ## Static analysis limitations
 

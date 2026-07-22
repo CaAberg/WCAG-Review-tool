@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import * as React from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { compileTsxForPreview } from "@/lib/a11y/preview/compile-tsx";
-import { checkFocusNotObscured } from "@/lib/a11y/runtime/focus-not-obscured";
+import { runRuntimeChecks } from "@/lib/a11y/runtime";
 import type { A11yFinding } from "@/lib/a11y/types";
 
 export type PreviewAnalyzeMessage = {
@@ -73,7 +73,7 @@ export default function AnalyzerPreviewPage() {
     reactRootRef.current = reactRoot;
     reactRoot.render(React.createElement(PreviewComponent));
 
-    return checkFocusNotObscured(mount);
+    return runRuntimeChecks(mount);
   }, []);
 
   useEffect(() => {

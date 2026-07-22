@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "generate:tokens": "node scripts/generate-design-tokens.mjs"
+    "generate:tokens": "node scripts/generate-design-tokens.mjs",
+    "generate:guides": "npx tsx scripts/generate-guide-stubs.ts"
   },
   "dependencies": {
     "@babel/parser": "^8.0.0",

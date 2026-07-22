@@ -19,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { groupFindingsByCriterion } from "@/lib/a11y/engine";
+import { getCoverageStats } from "@/lib/a11y/coverage-map";
 import { getRuleCount } from "@/lib/a11y/rules";
 import { getSeverityLabel } from "@/lib/a11y/severity-labels";
 import { getGuidePath, WCAG_CRITERIA } from "@/lib/a11y/wcag-map";
@@ -42,6 +43,7 @@ export function ResultsPanel({
   className,
 }: ResultsPanelProps) {
   const ruleCount = getRuleCount();
+  const coverage = getCoverageStats();
 
   if (isLoading) {
     return (
@@ -82,7 +84,8 @@ export function ResultsPanel({
           <CardTitle>No issues found</CardTitle>
           <CardDescription>
             Great work! No issues were detected by the current {ruleCount}{" "}
-            analyzer checks. Some WCAG criteria still require manual testing.
+            analyzer checks ({coverage.static} static · {coverage.runtime}{" "}
+            runtime). Some WCAG criteria still require manual testing.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -104,7 +107,9 @@ export function ResultsPanel({
         </CardTitle>
         <CardDescription>
           {mustFixCount} must fix · {shouldFixCount} should fix — review each
-          item below and apply the suggested fix.
+          item below and apply the suggested fix. Analyzer covers{" "}
+          {coverage.static + coverage.runtime} of {coverage.total} WCAG criteria
+          automatically.
         </CardDescription>
       </CardHeader>
       <CardContent>

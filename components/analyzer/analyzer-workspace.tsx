@@ -9,6 +9,7 @@ import {
   runPreviewAnalysis,
 } from "@/components/analyzer/preview-frame";
 import { ResultsPanel } from "@/components/analyzer/results-panel";
+import { ManualChecksPanel } from "@/components/analyzer/manual-checks-panel";
 import { SaveAuditDialog } from "@/components/analyzer/save-audit-dialog";
 import { Button } from "@/components/ui/button";
 import type { A11yFinding } from "@/lib/a11y/types";
@@ -130,6 +131,7 @@ export function AnalyzerWorkspace({
             previewError={previewError}
             isLoading={isLoading}
           />
+          <ManualChecksPanel code={code} className="mt-6" />
         </section>
       </div>
 

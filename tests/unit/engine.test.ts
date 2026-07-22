@@ -120,8 +120,8 @@ describe("analyzeTsx", () => {
             <h2>Section</h2>
             <img src="/a.png" alt="Chart showing growth" />
             <label htmlFor="email">Email</label>
-            <input id="email" type="email" />
-            <button type="button" aria-label="Close">X</button>
+            <input id="email" type="email" autoComplete="email" />
+            <button type="button" aria-label="Close">Close</button>
             <button className="outline-none focus-visible:ring-2">Submit</button>
           </div>
         );

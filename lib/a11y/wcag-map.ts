@@ -1,88 +1,16 @@
-import type { WcagCriterion } from "./types";
+import {
+  WCAG_CATALOG,
+  WCAG_CATALOG_COUNT,
+  WCAG_GUIDELINES,
+} from "./wcag-catalog-data";
+import type { WcagCriterion, WcagGuideline } from "./types";
 
-/** WCAG 2.2 criteria referenced by guides and static analysis rules. */
-export const WCAG_CRITERIA: Record<string, WcagCriterion> = {
-  "1.1.1": {
-    id: "1.1.1",
-    name: "Non-text Content",
-    level: "A",
-    description:
-      "All non-text content that is presented to the user has a text alternative that serves the equivalent purpose.",
-    guideSlug: "1-1-1-non-text-content",
-  },
-  "1.3.1": {
-    id: "1.3.1",
-    name: "Info and Relationships",
-    level: "A",
-    description:
-      "Information, structure, and relationships conveyed through presentation can be programmatically determined.",
-    guideSlug: "1-3-1-info-and-relationships",
-  },
-  "1.4.3": {
-    id: "1.4.3",
-    name: "Contrast (Minimum)",
-    level: "AA",
-    description:
-      "The visual presentation of text and images of text has a contrast ratio of at least 4.5:1.",
-    guideSlug: "1-4-3-contrast-minimum",
-  },
-  "2.1.1": {
-    id: "2.1.1",
-    name: "Keyboard",
-    level: "A",
-    description:
-      "All functionality of the content is operable through a keyboard interface.",
-    guideSlug: "2-1-1-keyboard",
-  },
-  "2.4.7": {
-    id: "2.4.7",
-    name: "Focus Visible",
-    level: "AA",
-    description:
-      "Any keyboard operable user interface has a mode of operation where the keyboard focus indicator is visible.",
-    guideSlug: "2-4-7-focus-visible",
-  },
-  "2.4.11": {
-    id: "2.4.11",
-    name: "Focus Not Obscured (Minimum)",
-    level: "AA",
-    description:
-      "When a user interface component receives keyboard focus, the component is not entirely hidden by author-created content.",
-    guideSlug: "2-4-11-focus-not-obscured",
-  },
-  "2.5.8": {
-    id: "2.5.8",
-    name: "Target Size (Minimum)",
-    level: "AA",
-    description:
-      "Target size for pointer inputs is at least 24 by 24 CSS pixels, except where spacing or equivalent alternatives apply.",
-    guideSlug: "2-5-8-target-size-minimum",
-  },
-  "3.2.6": {
-    id: "3.2.6",
-    name: "Consistent Help",
-    level: "A",
-    description:
-      "Help mechanisms are available in the same relative order on each page within a set of web pages.",
-    guideSlug: "3-2-6-consistent-help",
-  },
-  "3.3.2": {
-    id: "3.3.2",
-    name: "Labels or Instructions",
-    level: "A",
-    description:
-      "Labels or instructions are provided when content requires user input.",
-    guideSlug: "3-3-2-labels-or-instructions",
-  },
-  "4.1.2": {
-    id: "4.1.2",
-    name: "Name, Role, Value",
-    level: "A",
-    description:
-      "For all user interface components, the name and role can be programmatically determined.",
-    guideSlug: "4-1-2-name-role-value",
-  },
-};
+/** WCAG 2.1/2.2 criteria indexed by ID. */
+export const WCAG_CRITERIA: Record<string, WcagCriterion> = Object.fromEntries(
+  WCAG_CATALOG.map((criterion) => [criterion.id, criterion]),
+);
+
+export { WCAG_CATALOG, WCAG_CATALOG_COUNT, WCAG_GUIDELINES };
 
 /** Returns the guide path for a WCAG criterion ID. */
 export function getGuidePath(criterionId: string): string {
@@ -90,10 +18,37 @@ export function getGuidePath(criterionId: string): string {
   return criterion ? `/guides/${criterion.guideSlug}` : "/guides";
 }
 
-/** Returns all criteria covered by guides. */
+/** Returns all criteria in the catalog. */
 export function getAllCriteria(): WcagCriterion[] {
-  return Object.values(WCAG_CRITERIA);
+  return WCAG_CATALOG;
+}
+
+/** Returns criteria grouped by guideline ID. */
+export function getCriteriaByGuideline(): Map<string, WcagCriterion[]> {
+  const grouped = new Map<string, WcagCriterion[]>();
+
+  for (const criterion of WCAG_CATALOG) {
+    const list = grouped.get(criterion.guidelineId) ?? [];
+    list.push(criterion);
+    grouped.set(criterion.guidelineId, list);
+  }
+
+  return grouped;
+}
+
+/** Returns a guideline by ID. */
+export function getGuideline(guidelineId: string): WcagGuideline | undefined {
+  return WCAG_GUIDELINES.find((guideline) => guideline.id === guidelineId);
 }
 
 /** WCAG criterion IDs checked at runtime via live preview. */
-export const RUNTIME_WCAG_CRITERIA = new Set(["2.4.11"]);
+export const RUNTIME_WCAG_CRITERIA = new Set([
+  "1.4.13",
+  "2.1.2",
+  "2.3.3",
+  "2.4.3",
+  "2.4.11",
+  "2.4.12",
+  "2.4.13",
+  "2.5.2",
+]);

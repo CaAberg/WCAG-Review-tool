@@ -104,7 +104,7 @@ export function checkFocusNotObscured(root: HTMLElement): A11yFinding[] {
       ruleId: "focus-not-obscured",
       message: `<${tag}> is fully hidden by sticky or fixed content when focused. Keyboard users cannot see where focus is.`,
       severity: "blocking",
-      wcagCriteria: ["2.4.11"],
+      wcagCriteria: ["2.4.11", "2.4.12"],
       line: Number.isFinite(line) ? line : 0,
       column: 0,
       element: tag,

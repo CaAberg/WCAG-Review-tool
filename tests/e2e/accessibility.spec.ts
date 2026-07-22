@@ -20,6 +20,12 @@ test.describe("WCAG Access site", () => {
     expect(results.violations).toEqual([]);
   });
 
+  test("guides page lists WCAG guidelines", async ({ page }) => {
+    await page.goto("/guides");
+    await expect(page.getByRole("heading", { name: "1.1 Text Alternatives" })).toBeVisible();
+    await expect(page.getByText("1.1.1").first()).toBeVisible();
+  });
+
   test("account page has no accessibility violations", async ({ page }) => {
     await page.goto("/account");
     const results = await new AxeBuilder({ page }).analyze();
@@ -36,6 +42,19 @@ test.describe("WCAG Access site", () => {
     await page.goto("/analyzer");
     await page.getByRole("button", { name: "Analyze" }).click();
     await expect(page.getByText(/issue/i)).toBeVisible({ timeout: 10000 });
+  });
+
+  test("analyzer shows manual checks for video components", async ({ page }) => {
+    await page.goto("/analyzer");
+    await page.locator(".cm-content").click();
+    await page.keyboard.press("Control+A");
+    await page.keyboard.type(
+      'export function Demo() { return <video src="/demo.mp4" controls />; }',
+    );
+    await page.getByRole("button", { name: "Analyze" }).click();
+    await expect(page.getByText("Suggested manual checks")).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("can navigate from home to analyzer", async ({ page }) => {

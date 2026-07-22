@@ -6,6 +6,14 @@ export type WcagLevel = "A" | "AA" | "AAA";
 /** Severity of an accessibility finding. */
 export type FindingSeverity = "blocking" | "enhancement";
 
+/** Metadata for a WCAG guideline grouping success criteria. */
+export type WcagGuideline = {
+  id: string;
+  name: string;
+  principle: "1" | "2" | "3" | "4";
+  principleName: string;
+};
+
 /** Metadata for a WCAG success criterion. */
 export type WcagCriterion = {
   id: string;
@@ -13,6 +21,9 @@ export type WcagCriterion = {
   level: WcagLevel;
   description: string;
   guideSlug: string;
+  guidelineId: string;
+  guidelineName: string;
+  understandingUrl: string;
 };
 
 /** A single accessibility issue found in pasted TSX. */
