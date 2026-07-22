@@ -172,22 +172,25 @@ export function ResultsPanel({
                           <p className="text-xs font-medium text-muted-foreground">
                             Suggested fix
                           </p>
-                          <pre
-                            className={cn(
-                              "mt-1 max-w-full overflow-x-auto break-words rounded-md bg-muted p-3 text-xs font-mono",
-                            )}
-                          >
-                            {finding.suggestion}
-                          </pre>
+                          <p className="mt-1 text-sm">{finding.suggestion}</p>
+                          {finding.fixSnippet && (
+                            <pre
+                              className={cn(
+                                "mt-2 max-w-full overflow-x-auto break-words rounded-md bg-muted p-3 text-xs font-mono",
+                              )}
+                            >
+                              {finding.fixSnippet}
+                            </pre>
+                          )}
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             className="mt-2 min-h-11"
                             onClick={() => {
-                              void navigator.clipboard.writeText(
-                                finding.suggestion,
-                              );
+                              const copyText =
+                                finding.fixSnippet ?? finding.suggestion;
+                              void navigator.clipboard.writeText(copyText);
                               toast.success("Suggestion copied to clipboard");
                             }}
                           >

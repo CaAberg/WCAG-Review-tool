@@ -284,6 +284,21 @@ export function getTextContent(element: t.JSXElement): string {
     .join(" ");
 }
 
+/** Returns the name of the first child JSX element, if any. */
+export function getFirstChildElementName(element: t.JSXElement): string | null {
+  for (const child of element.children) {
+    if (!t.isJSXElement(child)) continue;
+
+    const name = child.openingElement.name;
+    if (t.isJSXIdentifier(name)) return name.name;
+    if (t.isJSXMemberExpression(name) && t.isJSXIdentifier(name.property)) {
+      return name.property.name;
+    }
+  }
+
+  return null;
+}
+
 /** Returns true when onClick is present on the opening element. */
 export function hasOnClick(opening: t.JSXOpeningElement): boolean {
   return hasAttribute(opening, "onClick");

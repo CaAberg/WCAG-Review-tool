@@ -20,6 +20,7 @@ describe("contrastMinimumRule", () => {
 
     expect(findings.some((f) => f.ruleId === "contrast-minimum")).toBe(true);
     expect(findings[0]?.wcagCriteria).toContain("1.4.3");
+    expect(findings[0]?.fixSnippet).toContain("color: '#1a1a1a'");
   });
 
   it("passes inline styles with sufficient contrast", () => {
@@ -43,6 +44,8 @@ describe("contrastMinimumRule", () => {
 
     expect(findings.some((f) => f.ruleId === "contrast-minimum")).toBe(true);
     expect(findings[0]?.message).toContain("text-gray-300");
+    expect(findings[0]?.fixSnippet).toContain("text-foreground bg-background");
+    expect(findings[0]?.fixSnippet).toContain("Muted");
   });
 
   it("passes semantic design token pairs with sufficient contrast", () => {

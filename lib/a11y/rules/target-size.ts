@@ -5,9 +5,11 @@ import {
   getClassNames,
   getElementName,
   getLocation,
+  getTextContent,
   parseClassTokens,
   walkJsxElements,
 } from "../ast-helpers";
+import { mergeClassNameSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 const INTERACTIVE_TAGS = new Set(["button", "a", "input"]);
@@ -55,15 +57,22 @@ export const targetSizeRule: A11yRule = {
       if (hasAdequateTargetPadding(classTokens)) return;
 
       const loc = getLocation(opening);
+      const elementTag = tag ?? "button";
       findings.push({
         ruleId: "target-size",
-        message: `<${tag ?? "element"}> may be too small to tap easily. Touch targets should be at least 24×24 CSS pixels.`,
+        message: `<${elementTag}> may be too small to tap easily. Touch targets should be at least 24×24 CSS pixels.`,
         severity: "blocking",
         wcagCriteria: ["2.5.8"],
         line: loc.line,
         column: loc.column,
-        element: tag ?? "element",
-        suggestion: `<${tag ?? "button"} className="min-h-6 min-w-6 p-2">Action</${tag ?? "button"}>`,
+        element: elementTag,
+        suggestion: "Increase the touch target with minimum size and padding classes.",
+        fixSnippet: mergeClassNameSnippet(
+          elementTag,
+          classTokens,
+          ["min-h-6", "min-w-6", "p-2"],
+          getTextContent(path.node) || "Action",
+        ),
       });
     });
 

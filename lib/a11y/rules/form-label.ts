@@ -9,6 +9,7 @@ import {
   hasAttribute,
   walkJsxElements,
 } from "../ast-helpers";
+import { formLabelFixSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 const FORM_INPUTS = new Set(["input", "select", "textarea"]);
@@ -73,7 +74,11 @@ export const formLabelRule: A11yRule = {
           line: loc.line,
           column: loc.column,
           element: tag,
-          suggestion: `<label htmlFor="field-id">Label</label>\n<${tag} id="field-id" />`,
+          suggestion: `<${tag}> is missing an associated label. Add a <label> linked by htmlFor/id.`,
+          fixSnippet: formLabelFixSnippet(tag, {
+            id,
+            type: inputType,
+          }),
         });
       }
     });

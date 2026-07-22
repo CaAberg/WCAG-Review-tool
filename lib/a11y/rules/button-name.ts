@@ -2,12 +2,14 @@ import type { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 import {
   getElementName,
+  getFirstChildElementName,
   getLocation,
   getTextContent,
   hasAttribute,
   hasOnlyNonTextChildren,
   walkJsxElements,
 } from "../ast-helpers";
+import { buttonNameFixSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 /** Flags buttons without accessible names (WCAG 4.1.2). */
@@ -33,6 +35,7 @@ export const buttonNameRule: A11yRule = {
       if (!text && !hasAriaLabel && !hasAriaLabelledBy && !hasTitle) {
         const loc = getLocation(opening);
         const iconOnly = hasOnlyNonTextChildren(path.node);
+        const childHint = getFirstChildElementName(path.node);
         findings.push({
           ruleId: "button-name",
           message: iconOnly
@@ -44,8 +47,9 @@ export const buttonNameRule: A11yRule = {
           column: loc.column,
           element: "button",
           suggestion: iconOnly
-            ? '<button aria-label="Close"><XIcon /></button>'
-            : "<button>Submit</button>",
+            ? "Add an aria-label that describes the button action."
+            : "Add visible text or an aria-label so screen readers can announce the button purpose.",
+          fixSnippet: buttonNameFixSnippet(iconOnly, childHint),
         });
       }
     });

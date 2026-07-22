@@ -7,6 +7,7 @@ import {
   hasAttribute,
   walkJsxElements,
 } from "../ast-helpers";
+import { imgFixSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 /** Flags images missing alt text (WCAG 1.1.1). */
@@ -35,8 +36,10 @@ export const imgAltRule: A11yRule = {
           line: loc.line,
           column: loc.column,
           element: "img",
-          suggestion:
-            'Add alt text: <img src="..." alt="Description of the image" />',
+          suggestion: "Add alt text to this image.",
+          fixSnippet: imgFixSnippet(opening, {
+            alt: "Description of the image",
+          }),
         });
       }
     });
@@ -72,7 +75,12 @@ export const imgEmptyAltRule: A11yRule = {
           line: loc.line,
           column: loc.column,
           element: "img",
-          suggestion: '<img src="..." alt="" role="presentation" />',
+          suggestion:
+            'Mark decorative images with alt="" and role="presentation".',
+          fixSnippet: imgFixSnippet(opening, {
+            alt: "",
+            role: "presentation",
+          }),
         });
       }
     });

@@ -17,9 +17,14 @@ import {
   getElementName,
   getInlineStyleProperties,
   getLocation,
+  getTextContent,
   parseClassTokens,
   walkJsxElements,
 } from "../ast-helpers";
+import {
+  inlineContrastFixSnippet,
+  replaceClassTokensSnippet,
+} from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 const TEXT_LIKE_TAGS = new Set([
@@ -79,7 +84,8 @@ export const contrastMinimumRule: A11yRule = {
             line: loc.line,
             column: loc.column,
             element: tag,
-            suggestion: `Use higher-contrast colors, e.g. style={{ color: '#1a1a1a', backgroundColor: '#ffffff' }}`,
+            suggestion: "Use higher-contrast foreground and background colors.",
+            fixSnippet: inlineContrastFixSnippet(tag, getTextContent(path.node)),
           });
           return;
         }
@@ -95,7 +101,16 @@ export const contrastMinimumRule: A11yRule = {
           line: loc.line,
           column: loc.column,
           element: tag,
-          suggestion: `<${tag} className="text-foreground bg-background">Readable text</${tag}>`,
+          suggestion: "Replace low-contrast text and background utility classes.",
+          fixSnippet: replaceClassTokensSnippet(
+            tag,
+            classTokens,
+            {
+              [failingPair.textClass]: "text-foreground",
+              [failingPair.bgClass]: "bg-background",
+            },
+            getTextContent(path.node),
+          ),
         });
         return;
       }
@@ -116,7 +131,16 @@ export const contrastMinimumRule: A11yRule = {
             line: loc.line,
             column: loc.column,
             element: tag,
-            suggestion: `<${tag} className="text-foreground bg-background">Readable text</${tag}>`,
+            suggestion: "Replace low-contrast semantic token classes.",
+            fixSnippet: replaceClassTokensSnippet(
+              tag,
+              classTokens,
+              {
+                [textToken.tokenClass]: "text-foreground",
+                [bgToken.tokenClass]: "bg-background",
+              },
+              getTextContent(path.node),
+            ),
           });
         }
       }

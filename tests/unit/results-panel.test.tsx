@@ -12,7 +12,8 @@ const sampleFinding: A11yFinding = {
   line: 3,
   column: 4,
   element: "img",
-  suggestion: '<img src="..." alt="Description" />',
+  suggestion: "Add alt text to this image.",
+  fixSnippet: '<img src="/logo.png" alt="Description" />',
 };
 
 describe("ResultsPanel", () => {
@@ -44,7 +45,7 @@ describe("ResultsPanel", () => {
     expect(screen.getByText(/analyzer checks/i)).toBeInTheDocument();
   });
 
-  it("copies suggestion to clipboard", async () => {
+  it("copies fixSnippet to clipboard when present", async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.spyOn(navigator.clipboard, "writeText").mockImplementation(writeText);
@@ -53,6 +54,23 @@ describe("ResultsPanel", () => {
 
     await user.click(screen.getByRole("button", { name: /Non-text Content/i }));
     await user.click(screen.getByRole("button", { name: "Copy suggestion" }));
-    expect(writeText).toHaveBeenCalledWith(sampleFinding.suggestion);
+    expect(writeText).toHaveBeenCalledWith(sampleFinding.fixSnippet);
+  });
+
+  it("copies suggestion when fixSnippet is absent", async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.spyOn(navigator.clipboard, "writeText").mockImplementation(writeText);
+
+    const findingWithoutSnippet: A11yFinding = {
+      ...sampleFinding,
+      fixSnippet: undefined,
+    };
+
+    render(<ResultsPanel findings={[findingWithoutSnippet]} />);
+
+    await user.click(screen.getByRole("button", { name: /Non-text Content/i }));
+    await user.click(screen.getByRole("button", { name: "Copy suggestion" }));
+    expect(writeText).toHaveBeenCalledWith(findingWithoutSnippet.suggestion);
   });
 });

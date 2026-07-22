@@ -1,4 +1,5 @@
 import type { A11yFinding } from "../types";
+import { focusNotObscuredFixSnippet } from "../suggestion-snippets";
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
@@ -108,7 +109,8 @@ export function checkFocusNotObscured(root: HTMLElement): A11yFinding[] {
       column: 0,
       element: tag,
       suggestion:
-        'Add scroll-margin to focusable elements or reduce sticky overlay height, e.g. className="scroll-mt-16 focus-visible:ring-2"',
+        "Add scroll-margin to focusable elements or reduce sticky overlay height.",
+      fixSnippet: focusNotObscuredFixSnippet(),
       source: "preview",
     });
   }

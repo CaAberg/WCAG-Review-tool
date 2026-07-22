@@ -4,8 +4,10 @@ import {
   getClassNames,
   getElementName,
   getLocation,
+  parseClassTokens,
   walkJsxElements,
 } from "../ast-helpers";
+import { mergeClassNameSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 const FOCUS_REPLACEMENT_CLASSES = [
@@ -45,6 +47,7 @@ export const focusVisibleRule: A11yRule = {
 
       if (!hasReplacement) {
         const loc = getLocation(opening);
+        const classTokens = parseClassTokens(classNames);
         findings.push({
           ruleId: "focus-visible",
           message: `Element uses outline-none without a visible focus indicator replacement.`,
@@ -54,7 +57,11 @@ export const focusVisibleRule: A11yRule = {
           column: loc.column,
           element: tag,
           suggestion:
-            'Add focus-visible styles: className="outline-none focus-visible:ring-2 focus-visible:ring-offset-2"',
+            "Add focus-visible ring styles so keyboard users can see focus.",
+          fixSnippet: mergeClassNameSnippet(tag, classTokens, [
+            "focus-visible:ring-2",
+            "focus-visible:ring-offset-2",
+          ]),
         });
       }
     });

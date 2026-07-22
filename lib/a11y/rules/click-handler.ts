@@ -8,6 +8,7 @@ import {
   NATIVE_INTERACTIVE,
   walkJsxElements,
 } from "../ast-helpers";
+import { clickHandlerFixSnippet } from "../suggestion-snippets";
 import type { A11yFinding, A11yRule, RuleContext } from "../types";
 
 /** Flags non-interactive elements with click handlers (WCAG 2.1.1, 4.1.2). */
@@ -44,6 +45,7 @@ export const clickHandlerRule: A11yRule = {
           column: loc.column,
           element: tag,
           suggestion: `Use a <button> instead, or add role="button" tabIndex={0} and onKeyDown handler.`,
+          fixSnippet: clickHandlerFixSnippet(),
         });
       }
     });

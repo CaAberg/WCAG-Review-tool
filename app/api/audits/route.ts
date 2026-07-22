@@ -15,6 +15,7 @@ const findingSchema = z.object({
   column: z.number(),
   element: z.string(),
   suggestion: z.string(),
+  fixSnippet: z.string().optional(),
 });
 
 const saveAuditSchema = z.object({

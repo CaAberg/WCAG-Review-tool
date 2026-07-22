@@ -25,6 +25,8 @@ export type A11yFinding = {
   column: number;
   element: string;
   suggestion: string;
+  /** Paste-ready JSX/HTML derived from the flagged element, when available. */
+  fixSnippet?: string;
   /** Origin of the finding — static AST rules or live preview runtime checks. */
   source?: "static" | "preview";
 };

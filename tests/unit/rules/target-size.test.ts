@@ -18,6 +18,7 @@ describe("targetSizeRule", () => {
 
     expect(findings.some((f) => f.ruleId === "target-size")).toBe(true);
     expect(findings[0]?.wcagCriteria).toContain("2.5.8");
+    expect(findings[0]?.fixSnippet).toContain("min-h-6 min-w-6 p-2");
   });
 
   it("passes buttons with adequate minimum size", () => {
