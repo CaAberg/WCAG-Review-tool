@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -24,11 +25,14 @@ export const metadata: Metadata = {
     "Paste your React components and get WCAG-aligned accessibility suggestions. Guides, checklists, and tools to build more inclusive apps.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isPreviewSurface = pathname.includes("/preview");
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -41,9 +45,15 @@ export default function RootLayout({
           enableColorScheme
           disableTransitionOnChange
         >
-          <SiteHeader />
-          <main className="min-w-0">{children}</main>
-          <Toaster richColors position="top-right" />
+          {!isPreviewSurface && <SiteHeader />}
+          {isPreviewSurface ? (
+            children
+          ) : (
+            <main className="min-w-0">{children}</main>
+          )}
+          {!isPreviewSurface && (
+            <Toaster richColors position="top-right" />
+          )}
         </ThemeProvider>
       </body>
     </html>

@@ -73,4 +73,15 @@ describe("ResultsPanel", () => {
     await user.click(screen.getByRole("button", { name: "Copy suggestion" }));
     expect(writeText).toHaveBeenCalledWith(findingWithoutSnippet.suggestion);
   });
+
+  it("renders page mode empty state copy", () => {
+    render(
+      <ResultsPanel
+        findings={[]}
+        mode="page"
+        scannedUrl="https://example.com"
+      />,
+    );
+    expect(screen.getByText(/No axe violations were detected/i)).toBeInTheDocument();
+  });
 });

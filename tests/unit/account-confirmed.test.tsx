@@ -24,10 +24,9 @@ describe("AccountConfirmedPage", () => {
     expect(
       screen.getByRole("link", { name: "Go to homepage" }),
     ).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Open analyzer" })).toHaveAttribute(
-      "href",
-      "/analyzer",
-    );
+    expect(
+      screen.getByRole("link", { name: "Open component analyzer" }),
+    ).toHaveAttribute("href", "/component-analyzer");
     expect(screen.getByRole("link", { name: "My audits" })).toHaveAttribute(
       "href",
       "/audits",

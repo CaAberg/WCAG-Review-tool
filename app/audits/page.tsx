@@ -44,7 +44,7 @@ export default async function AuditsPage() {
           </p>
         </div>
         <Button asChild className="w-full shrink-0 sm:w-auto">
-          <Link href="/analyzer">New audit</Link>
+          <Link href="/component-analyzer">New audit</Link>
         </Button>
       </div>
 

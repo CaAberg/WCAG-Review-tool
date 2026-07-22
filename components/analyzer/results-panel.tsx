@@ -30,6 +30,9 @@ export type ResultsPanelProps = {
   findings: A11yFinding[];
   parseError?: string | null;
   previewError?: string | null;
+  scanError?: string | null;
+  scannedUrl?: string | null;
+  mode?: "component" | "page";
   isLoading?: boolean;
   className?: string;
 };
@@ -39,21 +42,46 @@ export function ResultsPanel({
   findings,
   parseError,
   previewError,
+  scanError,
+  scannedUrl,
+  mode = "component",
   isLoading = false,
   className,
 }: ResultsPanelProps) {
   const ruleCount = getRuleCount();
   const coverage = getCoverageStats();
+  const isPageMode = mode === "page";
 
   if (isLoading) {
     return (
       <Card className={className} aria-live="polite" aria-busy="true">
         <CardHeader>
           <CardTitle>Results</CardTitle>
-          <CardDescription>Analyzing your component...</CardDescription>
+          <CardDescription>
+            {isPageMode ? "Scanning page..." : "Analyzing your component..."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-32 animate-pulse rounded-md bg-muted" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (scanError && findings.length === 0) {
+    return (
+      <Card className={className} role="alert">
+        <CardHeader>
+          <CardTitle>Scan Error</CardTitle>
+          <CardDescription>
+            Could not scan {scannedUrl ?? "the page"}. Check the URL and try
+            again.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <pre className="overflow-x-auto rounded-md bg-muted p-4 text-sm font-mono">
+            {scanError}
+          </pre>
         </CardContent>
       </Card>
     );
@@ -83,9 +111,26 @@ export function ResultsPanel({
         <CardHeader>
           <CardTitle>No issues found</CardTitle>
           <CardDescription>
-            Great work! No issues were detected by the current {ruleCount}{" "}
-            analyzer checks ({coverage.static} static · {coverage.runtime}{" "}
-            runtime). Some WCAG criteria still require manual testing.
+            {isPageMode ? (
+              <>
+                No axe violations were detected on{" "}
+                {scannedUrl ?? "this page"}. Manual WCAG checks still apply —
+                see the{" "}
+                <Link
+                  href="/guides"
+                  className="text-primary underline underline-offset-4 hover:underline"
+                >
+                  WCAG guides
+                </Link>{" "}
+                for criteria that require human review.
+              </>
+            ) : (
+              <>
+                Great work! No issues were detected by the current {ruleCount}{" "}
+                analyzer checks ({coverage.static} static · {coverage.runtime}{" "}
+                runtime). Some WCAG criteria still require manual testing.
+              </>
+            )}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -93,6 +138,9 @@ export function ResultsPanel({
   }
 
   const grouped = groupFindingsByCriterion(findings);
+  const unmappedFindings = findings.filter(
+    (finding) => finding.wcagCriteria.length === 0,
+  );
 
   const mustFixCount = findings.filter(
     (f) => f.severity === "blocking",
@@ -107,9 +155,20 @@ export function ResultsPanel({
         </CardTitle>
         <CardDescription>
           {mustFixCount} must fix · {shouldFixCount} should fix — review each
-          item below and apply the suggested fix. Analyzer covers{" "}
-          {coverage.static + coverage.runtime} of {coverage.total} WCAG criteria
-          automatically.
+          item below and apply the suggested fix.
+          {isPageMode ? (
+            <>
+              {" "}
+              Automated scan via axe-core on {scannedUrl ?? "the page"}. Manual
+              WCAG criteria still require human review.
+            </>
+          ) : (
+            <>
+              {" "}
+              Analyzer covers {coverage.static + coverage.runtime} of{" "}
+              {coverage.total} WCAG criteria automatically.
+            </>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -165,11 +224,16 @@ export function ResultsPanel({
                           {finding.source === "preview" && (
                             <Badge variant="outline">Live preview</Badge>
                           )}
-                          <span className="font-mono text-xs text-muted-foreground">
-                            Line {finding.line}:{finding.column}
-                          </span>
-                          <span className="font-mono text-xs text-muted-foreground">
-                            &lt;{finding.element}&gt;
+                          {finding.source === "axe" && (
+                            <Badge variant="outline">Page scan</Badge>
+                          )}
+                          {!isPageMode && finding.line > 0 && (
+                            <span className="font-mono text-xs text-muted-foreground">
+                              Line {finding.line}:{finding.column}
+                            </span>
+                          )}
+                          <span className="font-mono text-xs text-muted-foreground break-all">
+                            {isPageMode ? finding.element : `<${finding.element}>`}
                           </span>
                         </div>
                         <p className="mt-2 text-sm">{finding.message}</p>
@@ -209,6 +273,48 @@ export function ResultsPanel({
               </AccordionItem>
             );
           })}
+          {unmappedFindings.length > 0 && (
+            <AccordionItem value="unmapped">
+              <AccordionTrigger>
+                <div className="flex min-w-0 flex-wrap items-center gap-2 text-left">
+                  <span>Other axe rules</span>
+                  <Badge variant="secondary">{unmappedFindings.length}</Badge>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-4">
+                  {unmappedFindings.map((finding, index) => (
+                    <li
+                      key={`unmapped-${finding.ruleId}-${index}`}
+                      className="rounded-md border border-border p-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge
+                          variant={
+                            finding.severity === "blocking"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                        >
+                          {getSeverityLabel(finding.severity)}
+                        </Badge>
+                        {finding.source === "axe" && (
+                          <Badge variant="outline">Page scan</Badge>
+                        )}
+                        <span className="font-mono text-xs text-muted-foreground break-all">
+                          {finding.ruleId}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm">{finding.message}</p>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {finding.suggestion}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          )}
         </Accordion>
       </CardContent>
     </Card>

@@ -131,7 +131,7 @@ export function SaveAuditDialog({
         open={authOpen}
         onOpenChange={setAuthOpen}
         onSuccess={() => void handleAuthSuccess()}
-        callbackUrl="/analyzer"
+        callbackUrl="/component-analyzer"
       />
 
       {!authOpen && authChecked && user && (

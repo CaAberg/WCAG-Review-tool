@@ -9,13 +9,21 @@ test.describe("WCAG Access site", () => {
   });
 
   test("analyzer page has no accessibility violations", async ({ page }) => {
-    await page.goto("/analyzer");
-    const results = await new AxeBuilder({ page }).analyze();
+    await page.goto("/component-analyzer");
+    const results = await new AxeBuilder({ page })
+      .exclude('iframe[title="Accessibility preview"]')
+      .analyze();
     expect(results.violations).toEqual([]);
   });
 
   test("guides page has no accessibility violations", async ({ page }) => {
     await page.goto("/guides");
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test("page analyzer page has no accessibility violations", async ({ page }) => {
+    await page.goto("/page-analyzer");
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
@@ -39,13 +47,13 @@ test.describe("WCAG Access site", () => {
   });
 
   test("analyzer returns findings for bad component", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/component-analyzer");
     await page.getByRole("button", { name: "Analyze" }).click();
     await expect(page.getByText(/issue/i)).toBeVisible({ timeout: 10000 });
   });
 
   test("analyzer shows manual checks for video components", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/component-analyzer");
     await page.locator(".cm-content").click();
     await page.keyboard.press("Control+A");
     await page.keyboard.type(
@@ -59,8 +67,8 @@ test.describe("WCAG Access site", () => {
 
   test("can navigate from home to analyzer", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: "Try the Analyzer" }).first().click();
-    await page.waitForURL("**/analyzer");
+    await page.getByRole("link", { name: "Component Analyzer" }).first().click();
+    await page.waitForURL("**/component-analyzer");
     await expect(
       page.getByRole("heading", { name: "Component Analyzer" }),
     ).toBeVisible();
@@ -101,9 +109,11 @@ test.describe("Mobile navigation", () => {
   test("opens mobile menu and navigates to analyzer", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Open menu" }).click();
-    await expect(page.getByRole("link", { name: "Analyzer" })).toBeVisible();
-    await page.getByRole("link", { name: "Analyzer" }).click();
-    await page.waitForURL("**/analyzer");
+    await expect(
+      page.getByRole("link", { name: "Component Analyzer" }),
+    ).toBeVisible();
+    await page.getByRole("link", { name: "Component Analyzer" }).click();
+    await page.waitForURL("**/component-analyzer");
     await expect(
       page.getByRole("heading", { name: "Component Analyzer" }),
     ).toBeVisible();
@@ -127,7 +137,7 @@ test.describe("Mobile analyzer layout", () => {
   test.use({ viewport: { width: 320, height: 568 } });
 
   test("analyzer page has no horizontal overflow", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/component-analyzer");
     const hasOverflow = await page.evaluate(() => {
       return document.documentElement.scrollWidth > document.documentElement.clientWidth;
     });
@@ -135,13 +145,13 @@ test.describe("Mobile analyzer layout", () => {
   });
 
   test("analyzer toolbar buttons are visible", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/component-analyzer");
     await expect(page.getByRole("button", { name: "Analyze" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
   });
 
   test("analyzer results render without horizontal overflow", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/component-analyzer");
     await page.getByRole("button", { name: "Analyze" }).click();
     await expect(page.getByText(/issue/i)).toBeVisible({ timeout: 10000 });
 
@@ -169,7 +179,12 @@ test.describe("Auth flows", () => {
   });
 
   test("save audit opens auth dialog when not signed in", async ({ page }) => {
-    await page.goto("/analyzer");
+    await page.goto("/account");
+    if (await page.getByText("Account unavailable").isVisible()) {
+      test.skip(true, "Supabase is not configured for auth e2e tests.");
+    }
+
+    await page.goto("/component-analyzer");
     await page.getByRole("button", { name: "Save" }).click();
     await expect(
       page.getByRole("heading", { name: "Sign in to continue" }),
@@ -178,6 +193,10 @@ test.describe("Auth flows", () => {
 
   test("account page shows sign in form", async ({ page }) => {
     await page.goto("/account");
+    if (await page.getByText("Account unavailable").isVisible()) {
+      test.skip(true, "Supabase is not configured for auth e2e tests.");
+    }
+
     await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
     await expect(page.getByRole("tab", { name: "Sign in" })).toBeVisible();
     await expect(

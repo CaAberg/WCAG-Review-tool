@@ -42,7 +42,7 @@ export default async function AccountConfirmedPage() {
             <Link href="/">Go to homepage</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/analyzer">Open analyzer</Link>
+            <Link href="/component-analyzer">Open component analyzer</Link>
           </Button>
           <Button asChild variant="outline">
             <Link href="/audits">My audits</Link>

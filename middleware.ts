@@ -1,9 +1,11 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 /** Refreshes Supabase auth session cookies on each matched request. */
 export async function middleware(request: NextRequest) {
-  return updateSession(request);
+  const response = await updateSession(request);
+  response.headers.set("x-pathname", request.nextUrl.pathname);
+  return response;
 }
 
 export const config = {

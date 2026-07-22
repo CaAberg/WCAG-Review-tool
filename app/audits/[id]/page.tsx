@@ -64,7 +64,7 @@ export default async function AuditDetailPage({
             <Link href="/audits">Back to audits</Link>
           </Button>
           <Button asChild>
-            <Link href={`/analyzer?audit=${audit.id}`}>Open in analyzer</Link>
+            <Link href={`/component-analyzer?audit=${audit.id}`}>Open in component analyzer</Link>
           </Button>
         </div>
       </div>
