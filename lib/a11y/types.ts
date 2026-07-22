@@ -38,8 +38,8 @@ export type A11yFinding = {
   suggestion: string;
   /** Paste-ready JSX/HTML derived from the flagged element, when available. */
   fixSnippet?: string;
-  /** Origin of the finding — static AST rules or live preview runtime checks. */
-  source?: "static" | "preview";
+  /** Origin of the finding — static AST rules, live preview, or axe page scan. */
+  source?: "static" | "preview" | "axe";
 };
 
 /** Result of parsing and analyzing TSX source code. */

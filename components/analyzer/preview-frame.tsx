@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { A11yFinding } from "@/lib/a11y/types";
-import type { PreviewResultMessage } from "@/app/analyzer/preview/page";
+import type { PreviewResultMessage } from "@/app/component-analyzer/preview/page";
 
 export type PreviewFrameResult = {
   runtimeFindings: A11yFinding[];
@@ -97,7 +97,7 @@ export function PreviewFrame({ onReady }: PreviewFrameProps) {
   return (
     <iframe
       ref={iframeRef}
-      src="/analyzer/preview"
+      src="/component-analyzer/preview"
       title="Accessibility preview"
       className="sr-only"
       sandbox="allow-scripts allow-same-origin"

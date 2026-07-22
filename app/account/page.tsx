@@ -36,6 +36,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto max-w-lg px-4 py-10 sm:px-6">
+        <h1 className="mb-6 text-3xl font-bold tracking-tight">Account</h1>
         <Card>
           <CardHeader>
             <CardTitle>Account unavailable</CardTitle>
@@ -47,7 +48,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
           </CardHeader>
           <CardContent>
             <Button asChild variant="outline">
-              <Link href="/analyzer">Back to analyzer</Link>
+              <Link href="/component-analyzer">Back to component analyzer</Link>
             </Button>
           </CardContent>
         </Card>
@@ -58,9 +59,10 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   if (user) {
     return (
       <div className="mx-auto max-w-lg px-4 py-10 sm:px-6">
+        <h1 className="mb-6 text-3xl font-bold tracking-tight">Your account</h1>
         <Card>
           <CardHeader>
-            <CardTitle>Your account</CardTitle>
+            <CardTitle>Signed in</CardTitle>
             <CardDescription>Signed in as {user.email}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 sm:flex-row">

@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #111827;
+  background: #ffffff;
+}
+
+main {
+  width: 320px;
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+p {
+  margin: 0 0 12px;
+  color: #4b5563;
+}
+
+button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #111827;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#open-report {
+  margin-top: 8px;
+  background: #ffffff;
+  color: #111827;
+}
+
+#summary {
+  margin-top: 12px;
+}
+
+#summary ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.issue-count {
+  font-weight: 600;
+}
