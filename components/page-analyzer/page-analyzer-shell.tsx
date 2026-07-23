@@ -6,6 +6,7 @@ import type { PageViewport } from "@/lib/a11y/page-scan/types";
 import { ExtensionInstallCard } from "@/components/page-analyzer/extension-install-card";
 import { FindingsSidebar } from "@/components/page-analyzer/findings-sidebar";
 import { PageViewer } from "@/components/page-analyzer/page-viewer";
+import { ScanLoadingPanel } from "@/components/page-analyzer/scan-loading-panel";
 import { UrlScanForm } from "@/components/page-analyzer/url-scan-form";
 import { ViewerSummaryBar } from "@/components/page-analyzer/viewer-summary-bar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,57 +70,59 @@ export function PageAnalyzerShell({
       <UrlScanForm onSubmit={onScan} isLoading={isLoading} />
 
       {(scanError || isLoading || scannedUrl) && (
-        <Card>
+        <Card aria-busy={isLoading}>
           <CardHeader className="space-y-0 pb-0">
-            <CardTitle>Interactive results</CardTitle>
+            <CardTitle>{isLoading ? "Scan in progress" : "Interactive results"}</CardTitle>
             <CardDescription>
-              Click a numbered marker or sidebar item to inspect an issue.
+              {isLoading
+                ? "Please wait while the page loads and accessibility checks run."
+                : "Click a numbered marker or sidebar item to inspect an issue."}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0 pt-4">
-            <ViewerSummaryBar
-              url={scannedUrl}
-              findings={findings}
-              isLoading={isLoading}
-              onRescan={onRescan}
-            />
+            {isLoading ? (
+              <ScanLoadingPanel url={scannedUrl} message={loadingMessage} />
+            ) : (
+              <>
+                <ViewerSummaryBar
+                  url={scannedUrl}
+                  findings={findings}
+                  isLoading={isLoading}
+                  onRescan={onRescan}
+                />
 
-            {isLoading && (
-              <div className="border-b px-4 py-3 text-sm text-muted-foreground" aria-live="polite">
-                {loadingMessage ?? "Loading page and running accessibility checks..."}
-              </div>
-            )}
+                {scanError && (
+                  <div className="border-b px-4 py-3 text-sm text-destructive" role="alert">
+                    {scanError}
+                  </div>
+                )}
 
-            {scanError && !isLoading && (
-              <div className="border-b px-4 py-3 text-sm text-destructive" role="alert">
-                {scanError}
-              </div>
-            )}
+                <div className="grid min-h-[520px] lg:grid-cols-[minmax(280px,0.9fr)_minmax(0,1.6fr)]">
+                  <FindingsSidebar
+                    findings={findings}
+                    selectedFindingId={selectedFindingId}
+                    onSelectFinding={(findingId) => onSelectFinding(findingId)}
+                    className="max-h-[70vh]"
+                  />
+                  <PageViewer
+                    proxyUrl={proxyUrl}
+                    findings={findings}
+                    viewport={viewport}
+                    pageHeight={pageHeight}
+                    selectedFindingId={selectedFindingId}
+                    onSelectFinding={onSelectFinding}
+                    onNavigate={onNavigate}
+                    onFindingsUpdate={onFindingsUpdate}
+                    className="min-h-[520px] rounded-none border-0 border-l"
+                  />
+                </div>
 
-            <div className="grid min-h-[520px] lg:grid-cols-[minmax(280px,0.9fr)_minmax(0,1.6fr)]">
-              <FindingsSidebar
-                findings={findings}
-                selectedFindingId={selectedFindingId}
-                onSelectFinding={(findingId) => onSelectFinding(findingId)}
-                className="max-h-[70vh]"
-              />
-              <PageViewer
-                proxyUrl={proxyUrl}
-                findings={findings}
-                viewport={viewport}
-                pageHeight={pageHeight}
-                selectedFindingId={selectedFindingId}
-                onSelectFinding={onSelectFinding}
-                onNavigate={onNavigate}
-                onFindingsUpdate={onFindingsUpdate}
-                className="min-h-[520px] rounded-none border-0 border-l"
-              />
-            </div>
-
-            {selectedFinding && (
-              <div className="border-t px-4 py-3 text-sm text-muted-foreground">
-                Selected: {selectedFinding.message}
-              </div>
+                {selectedFinding && (
+                  <div className="border-t px-4 py-3 text-sm text-muted-foreground">
+                    Selected: {selectedFinding.message}
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

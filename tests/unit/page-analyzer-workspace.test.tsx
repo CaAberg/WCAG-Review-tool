@@ -32,6 +32,46 @@ describe("PageAnalyzerWorkspace", () => {
     vi.unstubAllGlobals();
   });
 
+  it("shows a loading state while a scan is in progress", async () => {
+    const user = userEvent.setup();
+    let resolveFetch: ((value: unknown) => void) | undefined;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        () =>
+          new Promise((resolve) => {
+            resolveFetch = resolve;
+          }),
+      ),
+    );
+
+    render(<PageAnalyzerWorkspace />);
+
+    await user.clear(screen.getByRole("textbox", { name: /page url/i }));
+    await user.type(
+      screen.getByRole("textbox", { name: /page url/i }),
+      "https://example.com",
+    );
+    await user.click(screen.getByRole("button", { name: /scan page/i }));
+
+    expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
+    expect(screen.getAllByText(/Scan in progress/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/0 errors/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/No accessibility issues detected/i),
+    ).not.toBeInTheDocument();
+
+    resolveFetch?.({
+      ok: true,
+      json: async () => mockScanResult,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/1 errors/i)).toBeInTheDocument();
+    });
+  });
+
   it("submits a URL and renders scan results", async () => {
     const user = userEvent.setup();
 
