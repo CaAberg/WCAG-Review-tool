@@ -67,6 +67,8 @@ export function PageAnalyzerWorkspace() {
     setSelectedFindingId(null);
     setScannedUrl(url);
     setProxyUrl(null);
+    setViewport(undefined);
+    setPageHeight(undefined);
 
     try {
       const response = await fetch("/api/proxy/render", {

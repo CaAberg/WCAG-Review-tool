@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -70,8 +70,12 @@ export function UrlScanForm({
           </p>
         )}
       </div>
-      <Button type="submit" disabled={isLoading} className="min-h-11">
-        <Search className="h-4 w-4" aria-hidden />
+      <Button type="submit" disabled={isLoading} className="min-h-11" aria-busy={isLoading}>
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+        ) : (
+          <Search className="h-4 w-4" aria-hidden />
+        )}
         {isLoading ? "Scanning..." : "Scan page"}
       </Button>
     </form>
