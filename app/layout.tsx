@@ -31,7 +31,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = (await headers()).get("x-pathname") ?? "";
-  const isPreviewSurface = pathname.includes("/preview");
+  const isPreviewSurface =
+    pathname.includes("/preview") || pathname.startsWith("/page-analyzer/proxy");
 
   return (
     <html lang="en" suppressHydrationWarning>

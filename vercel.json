@@ -3,6 +3,10 @@
     "app/api/scan/route.ts": {
       "maxDuration": 300,
       "memory": 2048
+    },
+    "app/api/proxy/render/route.ts": {
+      "maxDuration": 300,
+      "memory": 2048
     }
   }
 }

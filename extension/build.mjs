@@ -54,6 +54,13 @@ async function buildExtension() {
 
   await esbuild.build({
     ...sharedOptions,
+    entryPoints: [path.join(srcDir, "content-overlay.ts")],
+    outfile: path.join(distDir, "content-overlay.js"),
+    format: "iife",
+  });
+
+  await esbuild.build({
+    ...sharedOptions,
     entryPoints: [path.join(srcDir, "popup.ts")],
     outfile: path.join(distDir, "popup.js"),
     format: "esm",

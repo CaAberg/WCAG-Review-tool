@@ -8,8 +8,8 @@ test.describe("Page Analyzer", () => {
     expect(results.violations).toEqual([]);
   });
 
-  test("renders mocked scan results", async ({ page }) => {
-    await page.route("**/api/scan", async (route) => {
+  test("renders mocked scan results with viewer shell", async ({ page }) => {
+    await page.route("**/api/proxy/render", async (route) => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -17,6 +17,7 @@ test.describe("Page Analyzer", () => {
           url: "https://example.com",
           findings: [
             {
+              findingId: "finding-1",
               ruleId: "image-alt",
               message: "Images must have alternate text",
               severity: "blocking",
@@ -26,9 +27,13 @@ test.describe("Page Analyzer", () => {
               element: "img",
               suggestion: "Add alt text.",
               source: "axe",
+              boundingBox: { x: 10, y: 20, width: 100, height: 40 },
             },
           ],
           scannedAt: new Date().toISOString(),
+          viewport: { width: 1280, height: 720 },
+          pageHeight: 1200,
+          proxyUrl: "/page-analyzer/proxy?url=https%3A%2F%2Fexample.com",
         }),
       });
     });
@@ -36,13 +41,12 @@ test.describe("Page Analyzer", () => {
     await page.goto("/page-analyzer");
     await page.getByLabel("Page URL").fill("https://example.com");
     await page.getByRole("button", { name: "Scan page" }).click();
-    await expect(page.getByText("1 issue found")).toBeVisible({
+    await expect(page.getByText("1 errors")).toBeVisible({
       timeout: 15_000,
     });
-    await page.getByRole("button", { name: /1\.1\.1/i }).click();
-    await expect(
-      page.getByText("Images must have alternate text"),
-    ).toBeVisible();
+    await expect(page.getByText("Images must have alternate text")).toBeVisible();
+    await page.getByRole("option", { name: /Images must have alternate text/i }).click();
+    await expect(page.getByText("Selected: Images must have alternate text")).toBeVisible();
   });
 });
 

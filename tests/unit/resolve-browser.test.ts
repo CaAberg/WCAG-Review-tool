@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import fs from "fs";
 import {
   findPlaywrightChromiumPath,
   isServerlessEnvironment,
@@ -22,7 +23,19 @@ describe("resolve-browser", () => {
     const originalPath = process.env.PLAYWRIGHT_BROWSERS_PATH;
     process.env.PLAYWRIGHT_BROWSERS_PATH = "/definitely/missing/browsers";
 
+    const originalExistsSync = fs.existsSync;
+    vi.spyOn(fs, "existsSync").mockImplementation((target) => {
+      const normalized = String(target);
+      if (normalized.includes("ms-playwright")) {
+        return false;
+      }
+
+      return originalExistsSync(target);
+    });
+
     expect(findPlaywrightChromiumPath()).toBeUndefined();
+
+    vi.restoreAllMocks();
 
     if (originalPath === undefined) {
       delete process.env.PLAYWRIGHT_BROWSERS_PATH;

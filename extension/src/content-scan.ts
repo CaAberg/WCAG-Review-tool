@@ -1,5 +1,6 @@
 import axe from "axe-core";
 import { axeToFindings } from "../../lib/a11y/page-scan/axe-to-findings";
+import { enrichFindingsInDocument } from "../../lib/a11y/page-scan/enrich-findings";
 
 /** Runs axe on the active page DOM and returns normalized findings. */
 export default (async () => {
@@ -8,10 +9,16 @@ export default (async () => {
       resultTypes: ["violations"],
     });
 
+    const findings = enrichFindingsInDocument(
+      document,
+      axeToFindings(results),
+      window.location.href,
+    );
+
     return {
       ok: true as const,
       url: window.location.href,
-      findings: axeToFindings(results),
+      findings,
       violationCount: results.violations.length,
     };
   } catch (error) {

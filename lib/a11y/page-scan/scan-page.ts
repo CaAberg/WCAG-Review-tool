@@ -3,6 +3,7 @@ import "server-only";
 import AxeBuilder from "@axe-core/playwright";
 import type { Browser, BrowserContext } from "playwright-core";
 import { axeToFindings } from "./axe-to-findings";
+import { enrichFindingsOnPage } from "./enrich-findings";
 import { launchScanBrowser } from "./resolve-browser";
 import type { PageScanResult } from "./types";
 
@@ -70,9 +71,19 @@ export async function scanPage(url: string): Promise<PageScanResult> {
     }
 
     const axeResults = await new AxeBuilder({ page }).analyze();
-    const findings = axeToFindings(axeResults);
+    const baseFindings = axeToFindings(axeResults);
+    const findings = await enrichFindingsOnPage(page, baseFindings, url);
+    const viewport = page.viewportSize() ?? { width: 1280, height: 720 };
+    const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
 
-    return { url, findings, scannedAt };
+    return {
+      url,
+      findings,
+      scannedAt,
+      viewport,
+      pageHeight,
+      proxyUrl: `/page-analyzer/proxy?url=${encodeURIComponent(url)}`,
+    };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Page scan failed unexpectedly.";
