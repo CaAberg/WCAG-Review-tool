@@ -31,7 +31,9 @@ describe("axeToFindings", () => {
       line: 0,
       column: 0,
       element: "img",
+      selectors: ["img"],
     });
+    expect(findings[0]?.findingId).toBeTruthy();
     expect(findings[0]?.fixSnippet).toContain("img");
   });
 

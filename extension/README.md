@@ -24,7 +24,8 @@ Output is written to `extension/dist/`.
 1. Navigate to any http or https page.
 2. Click the WCAG Access extension icon.
 3. Choose **Scan this page**.
-4. Review the summary in the popup, or click **Open full report** to view results in the web app Page Analyzer.
+4. Click **Show markers on page** to overlay WAVE-style numbered bubbles on the live page.
+5. Review the summary in the popup, or click **Open full report** to view results in the web app Page Analyzer viewer.
 
 ## Permissions
 

@@ -2,14 +2,14 @@ import { z } from "zod";
 import { renderPage, validateScanUrl } from "@/lib/a11y/page-scan";
 
 export const runtime = "nodejs";
-/** Cold-start Chromium download plus page load can exceed 60s on Vercel. */
+/** Cold-start Chromium download plus page render can exceed 60s on Vercel. */
 export const maxDuration = 300;
 
-const scanRequestSchema = z.object({
+const renderRequestSchema = z.object({
   url: z.string().min(1, "URL is required.").max(2048, "URL is too long."),
 });
 
-/** Scans a public web page for accessibility violations using axe-core. */
+/** Renders a public page with Playwright and returns findings plus proxy URL. */
 export async function POST(request: Request) {
   let body: unknown;
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const parsed = scanRequestSchema.safeParse(body);
+  const parsed = renderRequestSchema.safeParse(body);
 
   if (!parsed.success) {
     return Response.json(

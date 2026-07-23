@@ -6,6 +6,14 @@ export type WcagLevel = "A" | "AA" | "AAA";
 /** Severity of an accessibility finding. */
 export type FindingSeverity = "blocking" | "enhancement";
 
+/** Document-space bounding box for page overlay markers. */
+export type ElementRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 /** Metadata for a WCAG guideline grouping success criteria. */
 export type WcagGuideline = {
   id: string;
@@ -40,6 +48,14 @@ export type A11yFinding = {
   fixSnippet?: string;
   /** Origin of the finding — static AST rules, live preview, or axe page scan. */
   source?: "static" | "preview" | "axe";
+  /** Stable identifier for overlay selection sync. */
+  findingId?: string;
+  /** Axe selector chain for resolving the flagged element. */
+  selectors?: string[];
+  /** Document-space coordinates for overlay markers. */
+  boundingBox?: ElementRect;
+  /** Page URL where the finding was detected. */
+  pageUrl?: string;
 };
 
 /** Result of parsing and analyzing TSX source code. */

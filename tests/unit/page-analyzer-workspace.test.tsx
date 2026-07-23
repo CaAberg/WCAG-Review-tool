@@ -3,6 +3,29 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PageAnalyzerWorkspace } from "@/components/page-analyzer/page-analyzer-workspace";
 
+const mockScanResult = {
+  url: "https://example.com",
+  findings: [
+    {
+      findingId: "finding-1",
+      ruleId: "image-alt",
+      message: "Images must have alternate text",
+      severity: "blocking" as const,
+      wcagCriteria: ["1.1.1"],
+      line: 0,
+      column: 0,
+      element: "img",
+      suggestion: "Add alt text.",
+      source: "axe" as const,
+      boundingBox: { x: 10, y: 20, width: 100, height: 40 },
+    },
+  ],
+  scannedAt: new Date().toISOString(),
+  viewport: { width: 1280, height: 720 },
+  pageHeight: 1200,
+  proxyUrl: "/page-analyzer/proxy?url=https%3A%2F%2Fexample.com",
+};
+
 describe("PageAnalyzerWorkspace", () => {
   afterEach(() => {
     cleanup();
@@ -16,23 +39,7 @@ describe("PageAnalyzerWorkspace", () => {
       "fetch",
       vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({
-          url: "https://example.com",
-          findings: [
-            {
-              ruleId: "image-alt",
-              message: "Images must have alternate text",
-              severity: "blocking",
-              wcagCriteria: ["1.1.1"],
-              line: 0,
-              column: 0,
-              element: "img",
-              suggestion: "Add alt text.",
-              source: "axe",
-            },
-          ],
-          scannedAt: new Date().toISOString(),
-        }),
+        json: async () => mockScanResult,
       }),
     );
 
@@ -46,13 +53,11 @@ describe("PageAnalyzerWorkspace", () => {
     await user.click(screen.getByRole("button", { name: /scan page/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/1 issue found/i)).toBeInTheDocument();
+      expect(screen.getByText(/Images must have alternate text/i)).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /1\.1\.1/i }));
-    expect(
-      screen.getByText(/Images must have alternate text/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/1 errors/i)).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /Images must have alternate text/i })).toBeInTheDocument();
   });
 
   it("shows scan errors from the API", async () => {
@@ -79,7 +84,9 @@ describe("PageAnalyzerWorkspace", () => {
     await user.click(screen.getByRole("button", { name: /scan page/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/scan error/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Private, local, or reserved hosts cannot be scanned/i),
+      ).toBeInTheDocument();
     });
   });
 });

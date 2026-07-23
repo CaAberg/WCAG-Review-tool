@@ -1,5 +1,6 @@
 import { WCAG_CATALOG } from "../wcag-catalog-data";
 import type { A11yFinding, FindingSeverity } from "../types";
+import { createFindingId, parseAxeTarget } from "./enrich-findings";
 
 /** Minimal axe violation shape used by the mapper. */
 export type AxeViolationLike = {
@@ -64,6 +65,7 @@ export function axeToFindings(results: AxeResultsLike): A11yFinding[] {
 
     if (violation.nodes.length === 0) {
       findings.push({
+        findingId: createFindingId(),
         ruleId: violation.id,
         message: violation.help,
         severity,
@@ -78,7 +80,10 @@ export function axeToFindings(results: AxeResultsLike): A11yFinding[] {
     }
 
     for (const node of violation.nodes) {
+      const selectors = parseAxeTarget(node.target);
+
       findings.push({
+        findingId: createFindingId(),
         ruleId: violation.id,
         message: violation.help,
         severity,
@@ -86,6 +91,7 @@ export function axeToFindings(results: AxeResultsLike): A11yFinding[] {
         line: 0,
         column: 0,
         element: formatTarget(node.target) || node.html.slice(0, 120),
+        selectors: selectors.length > 0 ? selectors : undefined,
         suggestion: `${violation.description} See ${violation.helpUrl}`,
         fixSnippet: node.html.length <= 500 ? node.html : undefined,
         source: "axe",
