@@ -52,7 +52,7 @@ export async function resolveBoundingBoxOnPage(
 
   try {
     const result = await page.evaluate((selectorChain) => {
-      let context: Document | Element = document;
+      let context: ParentNode = document;
 
       for (let index = 0; index < selectorChain.length - 1; index += 1) {
         const frameSelector = selectorChain[index];
@@ -126,7 +126,7 @@ export function enrichFindingsInDocument(
 
     if (selectors.length > 0) {
       try {
-        let context: Document | Element = doc;
+        let context: ParentNode = doc;
 
         for (let index = 0; index < selectors.length - 1; index += 1) {
           const frameSelector = selectors[index];

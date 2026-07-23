@@ -2,8 +2,6 @@ import axe from "axe-core";
 import { axeToFindings } from "../page-scan/axe-to-findings";
 import { enrichFindingsInDocument } from "../page-scan/enrich-findings";
 
-type ViewerFinding = ReturnType<typeof axeToFindings>[number];
-
 /** Posts scroll position updates to the parent viewer shell. */
 function postScrollUpdate(): void {
   window.parent.postMessage(
